@@ -4,7 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PocketFlow">
 <meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#7c6bff">
+<meta name="description" content="PocketFlow Pro — Your premium financial companion">
+<link rel="manifest" id="pwa-manifest">
 <title>PocketFlow Pro</title>
 <style>
 /* ===== CSS VARIABLES ===== */
@@ -130,6 +135,47 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 .icon-btn:hover { background: var(--surface3); transform: scale(1.05); }
 .icon-btn:active { transform: scale(0.95); }
 
+/* ===== PWA INSTALL BANNER ===== */
+#installBanner {
+  display: none;
+  margin: 12px 16px 0;
+  background: linear-gradient(135deg, rgba(124,107,255,0.18) 0%, rgba(167,139,250,0.1) 100%);
+  border: 1px solid rgba(124,107,255,0.3);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  align-items: center;
+  gap: 12px;
+  animation: fadeInUp 0.35s ease;
+  position: relative;
+}
+#installBanner.visible { display: flex; }
+.install-banner-icon { font-size: 26px; flex-shrink: 0; }
+.install-banner-text { flex: 1; min-width: 0; }
+.install-banner-title { font-size: 13px; font-weight: 700; color: var(--text); }
+.install-banner-sub { font-size: 11px; color: var(--text2); margin-top: 1px; }
+.install-banner-btn {
+  padding: 8px 14px; border-radius: 20px; font-size: 12px; font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: white; white-space: nowrap; flex-shrink: 0;
+  box-shadow: 0 3px 10px rgba(124,107,255,0.4);
+  transition: var(--transition);
+}
+.install-banner-btn:active { transform: scale(0.96); opacity: 0.9; }
+.install-banner-dismiss {
+  position: absolute; top: 8px; right: 10px;
+  font-size: 14px; color: var(--text3);
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+}
+.install-banner-dismiss:hover { background: var(--surface3); color: var(--text); }
+
+/* ===== PWA INSTALL ICON BUTTON ===== */
+#installIconBtn {
+  display: none;
+}
+#installIconBtn.visible { display: flex; }
+
 /* ===== PAGES ===== */
 .page { display: none; padding: 16px 16px calc(var(--nav-h) + 24px); min-height: calc(100dvh - 60px); animation: fadeInUp 0.3s ease; }
 .page.active { display: block; }
@@ -149,13 +195,13 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 .nav-inner { display: flex; justify-content: space-around; padding-top: 8px; }
 .nav-tab {
   display: flex; flex-direction: column; align-items: center; gap: 3px;
-  padding: 8px 20px; border-radius: 14px; transition: var(--transition);
-  position: relative; min-width: 72px;
+  padding: 8px 12px; border-radius: 14px; transition: var(--transition);
+  position: relative; min-width: 80px;
 }
 .nav-tab.active { background: var(--accent-glow); }
 .nav-icon { font-size: 22px; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); line-height: 1; }
 .nav-tab.active .nav-icon { transform: scale(1.2) translateY(-2px); }
-.nav-label { font-size: 10px; font-weight: 600; letter-spacing: 0.4px; color: var(--text3); transition: var(--transition); }
+.nav-label { font-size: 9px; font-weight: 600; letter-spacing: 0.2px; color: var(--text3); transition: var(--transition); text-align: center; line-height: 1.2; }
 .nav-tab.active .nav-label { color: var(--accent2); }
 .nav-dot { width: 4px; height: 4px; background: var(--accent); border-radius: 2px; position: absolute; bottom: 2px; opacity: 0; transition: var(--transition); }
 .nav-tab.active .nav-dot { opacity: 1; }
@@ -565,6 +611,7 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   .budget-hero-balance { font-size: 32px; }
   .calc-btn { font-size: 18px; border-radius: 12px; }
   .calc-grid { gap: 8px; }
+  .nav-label { font-size: 8px; }
 }
 
 /* ===== SCROLL SNAP ===== */
@@ -577,9 +624,6 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 }
 .pulse { animation: pulseGlow 2s ease infinite; }
 
-/* ===== SKELETON ===== */
-@keyframes shimmer { from{background-position:-200% 0} to{background-position:200% 0} }
-
 /* ===== MISC ===== */
 .divider { height: 1px; background: var(--border); margin: 8px 0; }
 .badge { display: inline-flex; align-items: center; justify-content: center;
@@ -588,6 +632,29 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 .flex-center { display: flex; align-items: center; justify-content: center; }
 .no-scroll { overflow: hidden; }
 .currency-symbol { color: var(--text3); font-size: 0.7em; vertical-align: super; }
+
+/* ===== PWA INSTALL SECTION IN SETTINGS ===== */
+.install-settings-row {
+  display: flex; align-items: center; gap: 12px; padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.install-settings-row:last-child { border-bottom: none; }
+.install-settings-icon { font-size: 24px; flex-shrink: 0; }
+.install-settings-info { flex: 1; }
+.install-settings-info .s-title { font-size: 15px; font-weight: 600; }
+.install-settings-info .s-sub { font-size: 12px; color: var(--text3); margin-top: 2px; line-height: 1.4; }
+.install-settings-btn {
+  padding: 9px 16px; border-radius: 20px; font-size: 13px; font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: white; white-space: nowrap; flex-shrink: 0;
+  box-shadow: 0 3px 10px rgba(124,107,255,0.35);
+  transition: var(--transition);
+}
+.install-settings-btn:active { transform: scale(0.96); }
+.install-settings-btn:disabled {
+  background: var(--surface3); color: var(--text3);
+  box-shadow: none; cursor: default;
+}
 </style>
 </head>
 <body>
@@ -610,9 +677,21 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
       <span class="topbar-title" id="topbarTitle">Budget</span>
     </div>
     <div class="topbar-actions">
+      <button class="icon-btn" id="installIconBtn" title="Install App">📲</button>
       <button class="icon-btn" id="themeBtn" title="Toggle theme">🌙</button>
       <button class="icon-btn" id="settingsBtn" title="Settings">⚙️</button>
     </div>
+  </div>
+
+  <!-- PWA INSTALL BANNER -->
+  <div id="installBanner">
+    <div class="install-banner-dismiss" id="installBannerDismiss">✕</div>
+    <div class="install-banner-icon">📲</div>
+    <div class="install-banner-text">
+      <div class="install-banner-title">Install PocketFlow Pro</div>
+      <div class="install-banner-sub">Add to home screen for offline access</div>
+    </div>
+    <button class="install-banner-btn" id="installBannerBtn">Install</button>
   </div>
 
   <!-- PAGES -->
@@ -666,9 +745,6 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
         <span class="search-icon">🔍</span>
         <input class="search-input" type="text" id="transSearch" placeholder="Search transactions…">
       </div>
-      <button class="filter-btn" id="filterAll">All</button>
-      <button class="filter-btn" id="filterSpent">Spent</button>
-      <button class="filter-btn active" id="filterAdded" style="display:none"></button>
     </div>
     <div class="filter-chips">
       <button class="filter-chip active" data-filter="all">🌐 All</button>
@@ -756,17 +832,17 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   <div class="nav-inner">
     <button class="nav-tab active" data-tab="budget">
       <span class="nav-icon">💰</span>
-      <span class="nav-label">Budget</span>
+      <span class="nav-label">PocketFlow Budget</span>
       <span class="nav-dot"></span>
     </button>
     <button class="nav-tab" data-tab="calc">
       <span class="nav-icon">🧮</span>
-      <span class="nav-label">Calc</span>
+      <span class="nav-label">PocketFlow Calc</span>
       <span class="nav-dot"></span>
     </button>
     <button class="nav-tab" data-tab="notes">
       <span class="nav-icon">📒</span>
-      <span class="nav-label">Notes</span>
+      <span class="nav-label">PocketFlow Notes</span>
       <span class="nav-dot"></span>
     </button>
   </div>
@@ -798,7 +874,7 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
         <input type="number" class="field-input" id="transAmount" placeholder="0.00" min="0.01" step="0.01">
       </div>
       <div class="field">
-        <label>Date & Time</label>
+        <label>Date &amp; Time</label>
         <input type="datetime-local" class="field-input" id="transDateTime">
       </div>
       <input type="hidden" id="transEditId">
@@ -873,6 +949,23 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
         </div>
       </div>
 
+      <!-- PWA INSTALL SECTION IN SETTINGS -->
+      <div class="section-title">App Installation</div>
+      <div class="card" id="installSettingsCard">
+        <div class="install-settings-row">
+          <div class="install-settings-icon">📲</div>
+          <div class="install-settings-info">
+            <div class="s-title" id="installSettingsTitle">Install PocketFlow Pro</div>
+            <div class="s-sub" id="installSettingsSub">Install on your device for offline access and a native app experience.</div>
+          </div>
+          <button class="install-settings-btn" id="installSettingsBtn">Install</button>
+        </div>
+        <div class="divider"></div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.6;padding-top:4px">
+          Works on Chrome, Edge, Samsung Internet (Android) and Chrome/Edge on desktop. On iOS Safari: tap Share → Add to Home Screen.
+        </div>
+      </div>
+
       <div class="section-title">Data Management</div>
       <div class="card">
         <div class="import-export-row">
@@ -907,6 +1000,88 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
+// ===== PWA: INLINE MANIFEST INJECTION =====
+(function() {
+  const manifest = {
+    name: "PocketFlow Pro",
+    short_name: "PocketFlow",
+    description: "Your premium financial companion — budget tracker, calculator & notes",
+    start_url: "./",
+    display: "standalone",
+    orientation: "portrait-primary",
+    background_color: "#0a0a0f",
+    theme_color: "#7c6bff",
+    categories: ["finance", "productivity", "utilities"],
+    icons: [
+      {
+        src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='115' fill='%237c6bff'/><text y='360' x='256' text-anchor='middle' font-size='300' font-family='system-ui'>💸</text></svg>`),
+        sizes: "512x512",
+        type: "image/svg+xml",
+        purpose: "any maskable"
+      }
+    ],
+    shortcuts: [
+      { name: "Budget Tracker", short_name: "Budget", description: "Track income and expenses", url: "./?tab=budget", icons: [{ src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><text y='80' font-size='80'>💰</text></svg>`), sizes: "96x96" }] },
+      { name: "Calculator", short_name: "Calc", description: "Open the calculator", url: "./?tab=calc", icons: [{ src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><text y='80' font-size='80'>🧮</text></svg>`), sizes: "96x96" }] },
+      { name: "Notes", short_name: "Notes", description: "View your notes", url: "./?tab=notes", icons: [{ src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><text y='80' font-size='80'>📒</text></svg>`), sizes: "96x96" }] }
+    ]
+  };
+
+  const blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+  const url = URL.createObjectURL(blob);
+  document.getElementById('pwa-manifest').href = url;
+})();
+
+// ===== PWA: SERVICE WORKER (INLINE BLOB) =====
+(function() {
+  const swCode = `
+const CACHE_NAME = 'pocketflow-pro-v1';
+const urlsToCache = [];
+
+self.addEventListener('install', event => {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+    ).then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('fetch', event => {
+  if (event.request.method !== 'GET') return;
+  event.respondWith(
+    caches.open(CACHE_NAME).then(cache =>
+      cache.match(event.request).then(cached => {
+        const networkFetch = fetch(event.request).then(response => {
+          if (response && response.status === 200 && response.type === 'basic') {
+            cache.put(event.request, response.clone());
+          }
+          return response;
+        });
+        return cached || networkFetch;
+      })
+    ).catch(() => caches.match(event.request))
+  );
+});
+`;
+
+  if ('serviceWorker' in navigator) {
+    const swBlob = new Blob([swCode], { type: 'application/javascript' });
+    const swUrl = URL.createObjectURL(swBlob);
+    navigator.serviceWorker.register(swUrl, { scope: './' })
+      .then(reg => {
+        console.log('[PocketFlow] Service worker registered:', reg.scope);
+      })
+      .catch(err => {
+        console.warn('[PocketFlow] SW registration failed (blob SW not supported in all environments):', err);
+        // Silently fail — app still works fully, just without offline SW caching
+      });
+  }
+})();
+
 // ===== APP STATE =====
 const DEFAULT_STATE = {
   totalCash: 0,
@@ -933,6 +1108,10 @@ let calcJustEvaluated = false;
 let calcDisplayExpr = '';
 let confirmCallback = null;
 
+// ===== PWA INSTALL STATE =====
+let deferredInstallPrompt = null;
+let isAppInstalled = false;
+
 // ===== STORAGE =====
 function loadState() {
   try {
@@ -949,6 +1128,12 @@ function saveState() {
 // ===== SPLASH =====
 setTimeout(() => {
   document.getElementById('splash').classList.add('hide');
+  // Check for tab in URL after splash
+  const urlParams = new URLSearchParams(window.location.search);
+  const tabParam = urlParams.get('tab');
+  if (tabParam && ['budget','calc','notes'].includes(tabParam)) {
+    switchTab(tabParam);
+  }
 }, 1800);
 
 // ===== THEME =====
@@ -963,11 +1148,116 @@ document.getElementById('themeBtn').addEventListener('click', () => {
 });
 applyTheme();
 
+// ===== PWA INSTALL LOGIC =====
+function updateInstallUI() {
+  const iconBtn = document.getElementById('installIconBtn');
+  const banner = document.getElementById('installBanner');
+  const settingsBtn = document.getElementById('installSettingsBtn');
+  const settingsTitle = document.getElementById('installSettingsTitle');
+  const settingsSub = document.getElementById('installSettingsSub');
+
+  if (isAppInstalled) {
+    // Already installed — hide prompts, show installed state
+    iconBtn.classList.remove('visible');
+    banner.classList.remove('visible');
+    settingsBtn.textContent = '✓ Installed';
+    settingsBtn.disabled = true;
+    settingsTitle.textContent = 'PocketFlow Pro is Installed';
+    settingsSub.textContent = 'The app is installed on your device. You can launch it from your home screen or app drawer.';
+  } else if (deferredInstallPrompt) {
+    // Install available — show banner and icon
+    iconBtn.classList.add('visible');
+    // Only show banner if not previously dismissed
+    if (!sessionStorage.getItem('pf_banner_dismissed')) {
+      banner.classList.add('visible');
+    }
+    settingsBtn.textContent = 'Install';
+    settingsBtn.disabled = false;
+    settingsTitle.textContent = 'Install PocketFlow Pro';
+    settingsSub.textContent = 'Install on your device for a full native app experience with offline access.';
+  } else {
+    // Not installable via prompt (iOS Safari, or already installed without beforeinstallprompt)
+    iconBtn.classList.remove('visible');
+    banner.classList.remove('visible');
+    settingsBtn.textContent = 'Install';
+    settingsBtn.disabled = true;
+    settingsTitle.textContent = 'Install PocketFlow Pro';
+    // Detect iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    if (isIOS && !isInStandaloneMode) {
+      settingsSub.textContent = 'On iOS Safari: tap the Share button (□↑) then "Add to Home Screen".';
+      settingsBtn.disabled = true;
+    } else if (isInStandaloneMode) {
+      settingsBtn.textContent = '✓ Installed';
+      settingsBtn.disabled = true;
+      settingsTitle.textContent = 'PocketFlow Pro is Installed';
+      settingsSub.textContent = 'Running as installed app.';
+    } else {
+      settingsSub.textContent = 'Install on your device for offline access and a native app experience.';
+    }
+  }
+}
+
+// Capture the install prompt
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  updateInstallUI();
+});
+
+// Track if app was successfully installed
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null;
+  isAppInstalled = true;
+  updateInstallUI();
+  showToast('PocketFlow Pro installed!', 'success', '🎉', 4000);
+  document.getElementById('installBanner').classList.remove('visible');
+});
+
+// Check if already running as installed PWA
+if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+  isAppInstalled = true;
+}
+
+async function triggerInstall() {
+  if (!deferredInstallPrompt) return;
+  try {
+    deferredInstallPrompt.prompt();
+    const { outcome } = await deferredInstallPrompt.userChoice;
+    if (outcome === 'accepted') {
+      showToast('Installing PocketFlow Pro…', 'success', '📲');
+      deferredInstallPrompt = null;
+      document.getElementById('installBanner').classList.remove('visible');
+      updateInstallUI();
+    } else {
+      showToast('Installation cancelled', 'info', 'ℹ️');
+    }
+  } catch(e) {
+    console.warn('[PocketFlow] Install prompt error:', e);
+  }
+}
+
+// Banner buttons
+document.getElementById('installBannerBtn').addEventListener('click', triggerInstall);
+document.getElementById('installBannerDismiss').addEventListener('click', () => {
+  document.getElementById('installBanner').classList.remove('visible');
+  sessionStorage.setItem('pf_banner_dismissed', '1');
+});
+
+// Icon button in topbar
+document.getElementById('installIconBtn').addEventListener('click', triggerInstall);
+
+// Settings install button
+document.getElementById('installSettingsBtn').addEventListener('click', triggerInstall);
+
+// Init install UI
+updateInstallUI();
+
 // ===== NAVIGATION =====
 const tabs = document.querySelectorAll('.nav-tab');
 const pages = { budget: 'pageBudget', calc: 'pageCalc', notes: 'pageNotes' };
 const titles = { budget: 'Budget', calc: 'Calculator', notes: 'Notes' };
-const icons = { budget: '💸', calc: '🧮', notes: '📒' };
 
 function switchTab(tab) {
   tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
@@ -1074,7 +1364,6 @@ function renderBudget() {
   const totalAdded = calcTotalAdded();
   const totalSpent = calcTotalSpent();
   const dailyAvg = calcDailyAvg();
-  const cur = state.currency;
 
   // Hero
   const balEl = document.getElementById('heroBalance');
@@ -1179,20 +1468,17 @@ function openTransSheet(type = 'spent', editData = null) {
   document.getElementById('transSheetTitle').textContent = editData ? 'Edit Transaction' : 'Add Transaction';
   document.getElementById('transSheetSub').textContent = editData ? 'Update this entry' : 'Record your income or expense';
 
-  // Type buttons
   const t = editData ? editData.type : type;
   setTransType(t);
 
   document.getElementById('transReason').value = editData ? editData.reason : '';
   document.getElementById('transAmount').value = editData ? editData.amount : '';
 
-  // Default datetime to now
   const now = new Date();
   now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
   const dtVal = editData ? new Date(new Date(editData.datetime).getTime() - new Date().getTimezoneOffset()*60000).toISOString().slice(0,16) : now.toISOString().slice(0,16);
   document.getElementById('transDateTime').value = dtVal;
 
-  // Clear errors
   document.getElementById('transReason').classList.remove('error-input');
   document.getElementById('transAmount').classList.remove('error-input');
 
@@ -1265,7 +1551,6 @@ function calcRender() {
   const res = document.getElementById('calcResult');
   res.textContent = calcCurrent;
   res.className = 'calc-result' + (calcCurrent === 'Error' ? ' error' : '');
-  // Shrink for long numbers
   const len = calcCurrent.length;
   res.style.fontSize = len > 12 ? '24px' : len > 9 ? '32px' : '44px';
 }
@@ -1306,7 +1591,6 @@ function calcEqual() {
   const expr = `${formatCalcNum(calcPrev)} ${opSymbol(calcOperator)} ${formatCalcNum(num)}`;
   const res = doCalc(calcPrev, num, calcOperator);
   const resStr = formatCalcNum(res);
-  // Save to history
   state.calcHistory.unshift({ expr, result: resStr, id: uid() });
   if (state.calcHistory.length > 30) state.calcHistory = state.calcHistory.slice(0, 30);
   saveState();
@@ -1333,7 +1617,6 @@ function formatCalcNum(n) {
   if (n === 'Error') return 'Error';
   if (typeof n === 'string') n = parseFloat(n);
   if (isNaN(n)) return 'Error';
-  // Avoid floating point display issues
   const s = parseFloat(n.toPrecision(12));
   return String(s);
 }
@@ -1503,6 +1786,7 @@ document.getElementById('settingsBtn').addEventListener('click', () => {
   document.getElementById('settingsCash').value = state.totalCash || '';
   document.getElementById('settingsBudget').value = state.monthlyBudget || '';
   document.getElementById('currencySelect').value = state.currency || '₹';
+  updateInstallUI(); // refresh install state each time settings opens
   openSheet('settingsOverlay');
 });
 document.getElementById('settingsClose').addEventListener('click', () => closeSheet('settingsOverlay'));
