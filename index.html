@@ -2096,7 +2096,7 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
             </div>
             <div class="export-preview-item">
               <div class="export-preview-val" id="prevTotal">₹0</div>
-              <div class="export-preview-lbl">Total Amount</div>
+              <div class="export-preview-lbl">Gross Amount</div>
             </div>
             <div class="export-preview-item">
               <div class="export-preview-val" id="prevNet">₹0</div>
@@ -3003,8 +3003,21 @@ function exportStats(type){
   });
   const bankItems=items.filter(t=>(t.source||'cash')==='bank');
   const cashItems=items.filter(t=>(t.source||'cash')==='cash');
-  const bankTotal=bankItems.reduce((a,t)=>a+(parseFloat(t.amount)||0),0);
-  const cashTotal=cashItems.reduce((a,t)=>a+(parseFloat(t.amount)||0),0);
+  // Signed net movement within the exported set (received +, spent -, pending excluded),
+  // matching calcBalance()'s sign convention so these figures are directly comparable
+  // to the dashboard's Bank/Cash Balance cards rather than an unsigned amount sum.
+  const bankTotal=bankItems.reduce((a,t)=>{
+    const st=t.status||t.type;
+    if(st==='received')return a+(parseFloat(t.amount)||0);
+    if(st==='spent')return a-(parseFloat(t.amount)||0);
+    return a;
+  },0);
+  const cashTotal=cashItems.reduce((a,t)=>{
+    const st=t.status||t.type;
+    if(st==='received')return a+(parseFloat(t.amount)||0);
+    if(st==='spent')return a-(parseFloat(t.amount)||0);
+    return a;
+  },0);
   let dateRange='No transactions';
   if(count){
     const sorted=[...items].sort((a,b)=>new Date(a.datetime)-new Date(b.datetime));
@@ -3074,7 +3087,7 @@ document.getElementById('exportWaBtn').addEventListener('click',()=>{
       return `${signMap[st]||''}${fmt(t.amount)} ${src} — ${t.reason} (${ds})`;
     }).join('\n');
   const moreNote=stats.count>40?`\n…and ${stats.count-40} more`:'';
-  const msg=`*PocketFlow Pro — Export*\n\n📂 *${EXPORT_LABELS[exportType]}*\n📊 Records: *${stats.count}*\n💰 Total: *${fmt(stats.total)}*\n📈 Net Effect: *${fmtSignedFull(stats.net)}*\n🏦 Bank: ${fmt(stats.bankTotal)}  💵 Cash: ${fmt(stats.cashTotal)}\n📅 ${stats.dateRange}\n\n${lines}${moreNote}\n\n_Sent via PocketFlow Pro_`;
+  const msg=`*PocketFlow Pro — Export*\n\n📂 *${EXPORT_LABELS[exportType]}*\n📊 Records: *${stats.count}*\n💰 Gross: *${fmt(stats.total)}*\n📈 Net Effect: *${fmtSignedFull(stats.net)}*\n🏦 Bank Movement: ${fmtSignedFull(stats.bankTotal)}  💵 Cash Movement: ${fmtSignedFull(stats.cashTotal)}\n📅 ${stats.dateRange}\n\n${lines}${moreNote}\n\n_Sent via PocketFlow Pro_`;
   window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
   showToast('Opening WhatsApp…','success');
 });
@@ -3118,7 +3131,7 @@ document.getElementById('exportPdfBtn').addEventListener('click',()=>{
     <div><div class="sv">${fmt(stats.total)}</div><div class="sl">Total</div></div>
     <div><div class="sv" style="color:${stats.net<0?'#DC2626':stats.net>0?'#059669':'#0A0F1E'}">${fmtSignedFull(stats.net)}</div><div class="sl">Net Effect</div></div>
   </div>
-  <div class="meta">🏦 Bank: ${fmt(stats.bankTotal)} &nbsp;·&nbsp; 💵 Cash: ${fmt(stats.cashTotal)} &nbsp;·&nbsp; ${stats.dateRange}</div>
+  <div class="meta">🏦 Bank: <span style="color:${stats.bankTotal<0?'#DC2626':'#1e293b'}">${fmtSignedFull(stats.bankTotal)}</span> &nbsp;·&nbsp; 💵 Cash: <span style="color:${stats.cashTotal<0?'#DC2626':'#1e293b'}">${fmtSignedFull(stats.cashTotal)}</span> &nbsp;·&nbsp; ${stats.dateRange}</div>
   ${rowsHtml}
   </div><div class="wm">POCKETFLOW PRO • VERIFIED EXPORT</div></div>
   <script>window.onload=function(){setTimeout(function(){window.print();},350);}<\/script></body></html>`;
