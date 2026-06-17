@@ -2211,7 +2211,7 @@ function fmt(n){
   const cur=S.currency||'₹';
   const abs=Math.abs(n);
   const f=abs>=1000?abs.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}):abs.toFixed(2);
-  return cur+f;
+  return (n<0?'−':'')+cur+f;
 }
 function fmtS(n){
   const cur=S.currency||'₹';const abs=Math.abs(n);
@@ -2220,16 +2220,31 @@ function fmtS(n){
   if(abs>=1000)return cur+(abs/1000).toFixed(1)+'K';
   return cur+abs.toFixed(0);
 }
+// Signed version: shows −₹300 for negatives, +₹300 for positives
+function fmtSigned(n){
+  const sign=n<0?'−':n>0?'+':'';
+  return sign+fmtS(Math.abs(n));
+}
+// Full precision signed format for balance displays
+function fmtSignedFull(n){
+  const cur=S.currency||'₹';
+  const sign=n<0?'−':'';
+  return sign+cur+Math.abs(n).toFixed(2);
+}
 
 // ── BALANCE GRAPH ──
 function buildGraphPts(){
-  const sorted=[...S.transactions].sort((a,b)=>new Date(a.datetime)-new Date(b.datetime));
-  const pts=[];let bal=S.totalCash;
+  const sorted=[...S.transactions]
+    .filter(t=>{const st=t.status||t.type;return st==='received'||st==='spent';})
+    .sort((a,b)=>new Date(a.datetime)-new Date(b.datetime));
+  const baseBal=(parseFloat(S.totalCash)||0)+(parseFloat(S.totalBank)||0);
+  const pts=[];let bal=baseBal;
   if(!sorted.length){for(let i=0;i<7;i++)pts.push(bal);return pts;}
   pts.push(bal);
   sorted.forEach(t=>{
-    if(t.status==='received')bal+=t.amount;
-    else if(t.status==='spent')bal-=t.amount;
+    const st=t.status||t.type;
+    if(st==='received')bal+=parseFloat(t.amount)||0;
+    else if(st==='spent')bal-=parseFloat(t.amount)||0;
     pts.push(bal);
   });
   if(pts.length>20){
@@ -2255,7 +2270,24 @@ function drawGraph(){
   const toX=i=>pad+(i/(data.length-1))*(W-2*pad);
   const toY=v=>H-pad-((v-mn)/range)*(H-2*pad);
   const isDark=S.theme==='dark';
-  const tc=isDark?'rgba(0,229,195,':'rgba(0,184,158,';
+  const currentBal=data[data.length-1];
+  const baseBal=(parseFloat(S.totalCash)||0)+(parseFloat(S.totalBank)||0);
+  // Determine graph health color
+  let solidColor,rgbBase;
+  if(currentBal<0){
+    // Negative balance → red
+    solidColor=isDark?'#FF6B6B':'#DC2626';
+    rgbBase='255,107,107';
+  } else if(baseBal>0&&currentBal<baseBal*0.25){
+    // Below 25% of starting balance → yellow warning
+    solidColor=isDark?'#FBBF24':'#D97706';
+    rgbBase='251,191,36';
+  } else {
+    // Healthy → green
+    solidColor=isDark?'#34D399':'#059669';
+    rgbBase='52,211,153';
+  }
+  const tc=`rgba(${rgbBase},`;
 
   const fillGrad=ctx.createLinearGradient(0,0,0,H);
   fillGrad.addColorStop(0,tc+'0.18)');
@@ -2281,8 +2313,8 @@ function drawGraph(){
   ctx.strokeStyle=lineGrad;ctx.lineWidth=1.5;ctx.lineJoin='round';ctx.stroke();
 
   const lx=toX(data.length-1),ly=toY(data[data.length-1]);
-  ctx.beginPath();ctx.arc(lx,ly,3.5,0,Math.PI*2);ctx.fillStyle=isDark?'#00E5C3':'#00B89E';ctx.fill();
-  ctx.beginPath();ctx.arc(lx,ly,7,0,Math.PI*2);ctx.fillStyle=tc+'0.18)';ctx.fill();
+  ctx.beginPath();ctx.arc(lx,ly,3.5,0,Math.PI*2);ctx.fillStyle=solidColor;ctx.fill();
+  ctx.beginPath();ctx.arc(lx,ly,7,0,Math.PI*2);ctx.fillStyle=tc+'0.22)';ctx.fill();
 
   if(S.transactions.length){
     const first=new Date([...S.transactions].sort((a,b)=>new Date(a.datetime)-new Date(b.datetime))[0].datetime);
@@ -2292,37 +2324,41 @@ function drawGraph(){
 
 // ── CALCULATIONS ──
 function calcBalance(){
-  let b=(S.totalCash||0)+(S.totalBank||0);
+  let b=(parseFloat(S.totalCash)||0)+(parseFloat(S.totalBank)||0);
   S.transactions.forEach(t=>{
-    if((t.status||t.type)==='received')b+=t.amount;
-    else if((t.status||t.type)==='spent')b-=t.amount;
+    const st=t.status||t.type;
+    if(st==='received')b+=parseFloat(t.amount)||0;
+    else if(st==='spent')b-=parseFloat(t.amount)||0;
+    // pending: intentionally excluded from current balance
   });
   return b;
 }
-function sumByStatus(s){return S.transactions.filter(t=>(t.status||t.type)===s).reduce((a,t)=>a+t.amount,0);}
+function sumByStatus(s){return S.transactions.filter(t=>(t.status||t.type)===s).reduce((a,t)=>a+(parseFloat(t.amount)||0),0);}
 function calcDailyAvg(){
   const spent=S.transactions.filter(t=>(t.status||t.type)==='spent');
   if(!spent.length)return 0;
-  const days=new Set(spent.map(t=>t.datetime.split('T')[0]));
-  return sumByStatus('spent')/days.size;
+  const days=new Set(spent.map(t=>(t.datetime||'').split('T')[0]));
+  return sumByStatus('spent')/(days.size||1);
 }
 
 // ── BANK / CASH CALCULATIONS ──
 function calcBankBalance(){
-  let b=S.totalBank||0;
+  let b=parseFloat(S.totalBank)||0;
   S.transactions.filter(t=>t.source==='bank').forEach(t=>{
     const st=t.status||t.type;
-    if(st==='received')b+=t.amount;
-    else if(st==='spent')b-=t.amount;
+    if(st==='received')b+=parseFloat(t.amount)||0;
+    else if(st==='spent')b-=parseFloat(t.amount)||0;
+    // pending excluded from bank balance
   });
   return b;
 }
 function calcCashBalance(){
-  let b=S.totalCash||0;
+  let b=parseFloat(S.totalCash)||0;
   S.transactions.filter(t=>(t.source||'cash')==='cash').forEach(t=>{
     const st=t.status||t.type;
-    if(st==='received')b+=t.amount;
-    else if(st==='spent')b-=t.amount;
+    if(st==='received')b+=parseFloat(t.amount)||0;
+    else if(st==='spent')b-=parseFloat(t.amount)||0;
+    // pending excluded from cash balance
   });
   return b;
 }
@@ -2335,11 +2371,13 @@ function calcPendingPredictions(){
   const pending=S.transactions.filter(t=>(t.status||t.type)==='pending');
   if(!pending.length)return null;
   const currentBal=calcBalance();
-  const totalAmt=pending.reduce((a,t)=>a+t.amount,0);
-  // "If All Clear" means pending items are simply resolved/removed — no net change from them
-  // "All Received" and "All Spent" show best/worst case
+  const totalAmt=pending.reduce((a,t)=>a+(parseFloat(t.amount)||0),0);
+  // ifAllReceived: best case — all pending come in as income
+  // ifAllSpent:    worst case — all pending turn into expenses
+  // ifCleared:     neutral — pending cancelled, balance unchanged
   return {
-    count: pending.length,
+    count:         pending.length,
+    totalPending:  totalAmt,
     ifAllReceived: currentBal + totalAmt,
     ifAllSpent:    currentBal - totalAmt,
     ifCleared:     currentBal
@@ -2386,23 +2424,34 @@ function renderBudget(){
 
   // Hero balance
   const balEl=document.getElementById('heroBalance');
-  balEl.textContent=(bal<0?'-':'')+fmt(Math.abs(bal));
+  balEl.textContent=fmt(bal);
   balEl.className='hero-balance'+(bal<0?' negative':'');
 
   // Hero bank/cash sub-badges
   const hbb=document.getElementById('heroBankBal');
   const hcb=document.getElementById('heroCashBal');
-  if(hbb)hbb.textContent='Bank '+fmt(bankBal);
-  if(hcb)hcb.textContent='Cash '+fmt(cashBal);
-
+  if(hbb)hbb.textContent='Bank: '+fmt(bankBal);
+  if(hcb)hcb.textContent='Cash: '+fmt(cashBal);
+   
   const badge=document.getElementById('heroBadge');
   const totalBase=(S.totalCash||0)+(S.totalBank||0);
+  const badge=document.getElementById('heroBadge');
+  const totalBase=(parseFloat(S.totalCash)||0)+(parseFloat(S.totalBank)||0);
   if(totalBase>0){
     const pct=((bal-totalBase)/totalBase*100);
-    badge.textContent=(pct>=0?'▲ +':'▼ ')+Math.abs(pct).toFixed(1)+'%';
+    const absPct=Math.abs(pct).toFixed(1);
+    badge.textContent=(pct>=0?'▲ +':'▼ −')+absPct+'%';
     badge.className='hero-delta'+(pct>=0?' pos':' neg');
-  } else {badge.textContent='—';badge.className='hero-delta';}
-
+  } else if(bal>0){
+    badge.textContent='▲ NEW';
+    badge.className='hero-delta pos';
+  } else if(bal<0){
+    badge.textContent='▼ NEG';
+    badge.className='hero-delta neg';
+  } else {
+    badge.textContent='—';
+    badge.className='hero-delta';
+  }
   // heroSub shows budget hint only — bank/cash are shown in the badge row below
   let sub='';
   if(S.monthlyBudget>0){
@@ -2424,26 +2473,38 @@ function renderBudget(){
   const cvEl=document.getElementById('cashBalVal');
   if(bvEl){
     bvEl.textContent=fmt(bankBal);
-    bvEl.style.color=bankBal<0?'var(--expense)':'var(--blue)';
+    bvEl.style.color=bankBal<0?'var(--expense)':bankBal===0?'var(--text3)':'var(--blue)';
     document.getElementById('bankBalSub').textContent=bankTxCount+' transaction'+(bankTxCount!==1?'s':'');
-    document.getElementById('bankBadge').textContent=bankBal>=0?'NET ↑':'NET ↓';
+    document.getElementById('bankBadge').textContent=bankBal>0?'NET ↑':bankBal<0?'NET ↓':'NET =';
   }
   if(cvEl){
     cvEl.textContent=fmt(cashBal);
-    cvEl.style.color=cashBal<0?'var(--expense)':'var(--teal)';
+    cvEl.style.color=cashBal<0?'var(--expense)':cashBal===0?'var(--text3)':'var(--teal)';
     document.getElementById('cashBalSub').textContent=cashTxCount+' transaction'+(cashTxCount!==1?'s':'');
-    document.getElementById('cashBadge').textContent=cashBal>=0?'NET ↑':'NET ↓';
+    document.getElementById('cashBadge').textContent=cashBal>0?'NET ↑':cashBal<0?'NET ↓':'NET =';
   }
 
   // Pending predictions
   const pred=calcPendingPredictions();
   const predCard=document.getElementById('pendingPredCard');
-  if(pred&&predCard){
+ if(pred&&predCard){
     predCard.classList.add('visible');
     document.getElementById('predCount').textContent=pred.count+' pending';
-    document.getElementById('predIfAll').textContent=fmtS(pred.ifCleared);
-    document.getElementById('predIfReceived').textContent=fmtS(pred.ifAllReceived);
-    document.getElementById('predIfSpent').textContent=fmtS(pred.ifAllSpent);
+
+    // "If All Clear" = balance unchanged (pending cancelled)
+    const clearEl=document.getElementById('predIfAll');
+    clearEl.textContent=fmtSigned(pred.ifCleared);
+    clearEl.style.color='var(--teal)';
+
+    // "All Received" = best case
+    const recEl=document.getElementById('predIfReceived');
+    recEl.textContent=fmtSigned(pred.ifAllReceived);
+    recEl.style.color='var(--income)';
+
+    // "All Spent" = worst case, may be negative
+    const spEl=document.getElementById('predIfSpent');
+    spEl.textContent=fmtSigned(pred.ifAllSpent);
+    spEl.style.color=pred.ifAllSpent<0?'var(--expense)':'var(--pending)';
   } else if(predCard){
     predCard.classList.remove('visible');
   }
@@ -2524,15 +2585,16 @@ function cycleTxStatus(id){
   const next={received:'spent',spent:'pending',pending:'received'}[cur]||'received';
   // Animate the icon before re-render
   const iconEl=document.getElementById('txicon-'+id);
+  // Optimistically update state immediately for instant calculation accuracy
+  t.status=next;t.type=next;
+  saveState();
   if(iconEl){
     iconEl.classList.add('animating');
     setTimeout(()=>{
-      t.status=next;t.type=next;
-      saveState();renderBudget();
+      renderBudget(); // re-render after animation frame
     },200);
   } else {
-    t.status=next;t.type=next;
-    saveState();renderBudget();
+    renderBudget();
   }
   const labels={received:'✅ Received',spent:'💸 Spent',pending:'⏳ Pending'};
   showToast(labels[next]||next,'info');
@@ -2676,7 +2738,8 @@ document.getElementById('receiptCloseBtn').addEventListener('click',()=>closeShe
 document.getElementById('receiptShareBtn').addEventListener('click',()=>{
   if(!receiptTx)return;
   const tx=receiptTx;const st=tx.status||tx.type;const dt=new Date(tx.datetime);
-  const msg=`*PocketFlow Pro — Receipt*\n\n📋 *${st.charAt(0).toUpperCase()+st.slice(1)}*\n💰 Amount: *${fmt(tx.amount)}*\n📝 ${tx.reason}\n📅 ${dt.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}\n🕐 ${dt.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}\n🔖 TXN-${tx.id.toUpperCase().slice(-8)}\n\n_Sent via PocketFlow Pro_`;
+  const stSign={received:'+',spent:'−',pending:'~'}[st]||'';
+  const msg=`*PocketFlow Pro — Receipt*\n\n📋 *${st.charAt(0).toUpperCase()+st.slice(1)}*\n💰 Amount: *${stSign}${fmt(tx.amount)}*\n📝 ${tx.reason}\n📅 ${dt.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}\n🕐 ${dt.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}\n🔖 TXN-${tx.id.toUpperCase().slice(-8)}\n\n_Sent via PocketFlow Pro_`;
   window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
 });
 
@@ -2684,7 +2747,8 @@ document.getElementById('receiptPdfBtn').addEventListener('click',()=>{
   if(!receiptTx)return;
   const tx=receiptTx;const st=tx.status||tx.type;const dt=new Date(tx.datetime);
   const cMap={received:'#059669',spent:'#DC2626',pending:'#D97706'};
-  const sMap={received:'+',spent:'−',pending:'~'};
+  const sMap={received:'+\u202F',spent:'−\u202F',pending:'~\u202F'};
+  // \u202F = narrow no-break space for cleaner sign display
   const c=cMap[st]||'#0A0F1E';
   const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>PocketFlow Receipt</title>
   <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;background:#f8fafc;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
@@ -3070,7 +3134,20 @@ document.getElementById('resetAllBtn').addEventListener('click',()=>{
 
 // ── IMPORT / EXPORT ──
 document.getElementById('exportBtn').addEventListener('click',()=>{
-  const data={...S,exportedAt:new Date().toISOString(),appVersion:'3.0'};
+  const data={
+    ...S,
+    exportedAt:new Date().toISOString(),
+    appVersion:'3.1',
+    _computed:{
+      currentBalance:calcBalance(),
+      bankBalance:calcBankBalance(),
+      cashBalance:calcCashBalance(),
+      totalReceived:sumByStatus('received'),
+      totalSpent:sumByStatus('spent'),
+      totalPending:sumByStatus('pending'),
+      currency:S.currency||'₹'
+    }
+  };
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;
