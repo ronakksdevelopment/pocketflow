@@ -11,23 +11,20 @@
 <meta name="description" content="PocketFlow Pro — Your premium financial companion">
 <link rel="manifest" id="pwa-manifest">
 <title>PocketFlow Pro</title>
-<script src="https://cdn.lordicon.com/lordicon.js"></script>
+<!-- Lucide Icons via CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.383.0/umd/lucide.min.js"></script>
 <style>
 /* ============================================================
    POCKETFLOW PRO — MIDNIGHT LEDGER DESIGN SYSTEM 2026
-   Dark: Deep navy layered with frosted glass, teal accent
-   Light: Paper-white with deep ink, same teal accent
    ============================================================ */
 
 /* ── DESIGN TOKENS ── */
 :root {
-  /* Brand */
   --teal:        #00E5C3;
   --teal-dim:    rgba(0,229,195,0.12);
   --teal-glow:   rgba(0,229,195,0.22);
   --teal-mid:    rgba(0,229,195,0.08);
 
-  /* Semantic */
   --income:      #34D399;
   --income-bg:   rgba(52,211,153,0.10);
   --income-bd:   rgba(52,211,153,0.22);
@@ -40,7 +37,6 @@
   --blue:        #60A5FA;
   --blue-bg:     rgba(96,165,250,0.10);
 
-  /* Radius */
   --r-xs:  6px;
   --r-sm:  10px;
   --r:     14px;
@@ -48,17 +44,14 @@
   --r-lg:  24px;
   --r-xl:  32px;
 
-  /* Motion */
   --ease:      cubic-bezier(0.4,0,0.2,1);
   --spring:    cubic-bezier(0.34,1.56,0.64,1);
   --fast:      0.15s;
   --mid:       0.25s;
   --slow:      0.4s;
 
-  /* Nav */
   --nav-h: 70px;
 
-  /* Shadows */
   --shadow-sm:   0 2px 8px rgba(0,0,0,0.18);
   --shadow:      0 6px 24px rgba(0,0,0,0.28);
   --shadow-lg:   0 16px 48px rgba(0,0,0,0.36);
@@ -71,20 +64,16 @@
   --bg2:      #0D1424;
   --bg3:      #111927;
   --bg4:      #172030;
-
   --card:     rgba(17,25,39,0.95);
   --card2:    rgba(23,32,48,0.9);
   --glass:    rgba(13,20,36,0.75);
-
   --border:   rgba(255,255,255,0.06);
   --border2:  rgba(255,255,255,0.10);
   --border3:  rgba(255,255,255,0.15);
-
   --text:     #F0F4FF;
   --text2:    rgba(240,244,255,0.60);
   --text3:    rgba(240,244,255,0.35);
   --text4:    rgba(240,244,255,0.20);
-
   --bar-bg:   rgba(255,255,255,0.06);
   --topbar:   rgba(8,12,24,0.90);
   --nav-bg:   rgba(8,12,24,0.95);
@@ -94,8 +83,11 @@
   --input-focus: rgba(0,229,195,0.10);
   --hover:    rgba(255,255,255,0.04);
   --active:   rgba(255,255,255,0.07);
-
   --scrollbar: rgba(255,255,255,0.12);
+
+  /* Icon colors for dark mode = light */
+  --icon-color:      rgba(240,244,255,0.65);
+  --icon-color-muted: rgba(240,244,255,0.30);
 }
 
 /* ── LIGHT THEME ── */
@@ -104,20 +96,16 @@
   --bg2:      #FFFFFF;
   --bg3:      #FFFFFF;
   --bg4:      #EEF1FA;
-
   --card:     rgba(255,255,255,0.98);
   --card2:    rgba(240,244,255,0.9);
   --glass:    rgba(255,255,255,0.85);
-
   --border:   rgba(15,23,42,0.07);
   --border2:  rgba(15,23,42,0.11);
   --border3:  rgba(15,23,42,0.16);
-
   --text:     #0A0F1E;
   --text2:    rgba(10,15,30,0.60);
   --text3:    rgba(10,15,30,0.38);
   --text4:    rgba(10,15,30,0.20);
-
   --bar-bg:   rgba(10,15,30,0.07);
   --topbar:   rgba(245,247,255,0.92);
   --nav-bg:   rgba(255,255,255,0.96);
@@ -127,34 +115,29 @@
   --input-focus: rgba(0,180,155,0.08);
   --hover:    rgba(10,15,30,0.03);
   --active:   rgba(10,15,30,0.06);
-
   --shadow-sm:   0 2px 8px rgba(10,15,30,0.08);
   --shadow:      0 6px 24px rgba(10,15,30,0.10);
   --shadow-lg:   0 16px 48px rgba(10,15,30,0.12);
   --shadow-teal: 0 4px 20px rgba(0,180,155,0.15);
   --scrollbar: rgba(10,15,30,0.12);
-
   --teal:        #00B89E;
   --teal-dim:    rgba(0,184,158,0.12);
   --teal-glow:   rgba(0,184,158,0.18);
   --teal-mid:    rgba(0,184,158,0.07);
+
+  /* Icon colors for light mode = dark */
+  --icon-color:      rgba(10,15,30,0.60);
+  --icon-color-muted: rgba(10,15,30,0.28);
 }
 
 /* ── RESET ── */
-*,*::before,*::after {
-  box-sizing: border-box;
-  margin: 0; padding: 0;
-  -webkit-tap-highlight-color: transparent;
-}
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html { font-size: 16px; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Segoe UI', system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100dvh;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  background: var(--bg); color: var(--text);
+  min-height: 100dvh; overflow-x: hidden;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
 }
 button { cursor: pointer; border: none; background: none; font-family: inherit; color: inherit; }
 input, textarea, select { font-family: inherit; outline: none; border: none; background: none; color: inherit; }
@@ -162,6 +145,81 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 2px; }
+
+/* ── LUCIDE ICON BASE ── */
+.ico {
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.ico svg {
+  display: block;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* Icon size helpers */
+.ico-12 svg { width: 12px; height: 12px; }
+.ico-14 svg { width: 14px; height: 14px; }
+.ico-16 svg { width: 16px; height: 16px; }
+.ico-18 svg { width: 18px; height: 18px; }
+.ico-20 svg { width: 20px; height: 20px; }
+.ico-22 svg { width: 22px; height: 22px; }
+.ico-24 svg { width: 24px; height: 24px; }
+.ico-28 svg { width: 28px; height: 28px; }
+.ico-40 svg { width: 40px; height: 40px; }
+.ico-48 svg { width: 48px; height: 48px; }
+.ico-56 svg { width: 56px; height: 56px; }
+
+/* Icon color helpers using currentColor */
+.ico-ui       { color: var(--icon-color); }
+.ico-muted    { color: var(--icon-color-muted); }
+.ico-teal     { color: var(--teal); }
+.ico-income   { color: var(--income); }
+.ico-expense  { color: var(--expense); }
+.ico-pending  { color: var(--pending); }
+.ico-blue     { color: var(--blue); }
+.ico-text     { color: var(--text); }
+.ico-text2    { color: var(--text2); }
+.ico-text3    { color: var(--text3); }
+
+/* ── ICON ANIMATIONS ── */
+@keyframes icon-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes icon-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.75; transform: scale(0.92); }
+}
+@keyframes icon-bounce-in {
+  0%   { transform: scale(0.6); opacity: 0; }
+  60%  { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes icon-float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-3px); }
+}
+@keyframes icon-wiggle {
+  0%,100% { transform: rotate(0deg); }
+  20%      { transform: rotate(-8deg); }
+  40%      { transform: rotate(8deg); }
+  60%      { transform: rotate(-5deg); }
+  80%      { transform: rotate(4deg); }
+}
+
+.ico-spin svg      { animation: icon-spin 1.8s linear infinite; }
+.ico-pulse svg     { animation: icon-pulse 2.2s ease-in-out infinite; }
+.ico-float svg     { animation: icon-float 3s ease-in-out infinite; }
+.ico-wiggle:hover svg { animation: icon-wiggle 0.55s ease; }
+.icon-btn:hover .ico-spin-hover svg { animation: icon-spin 0.6s var(--ease); }
+
+/* Splash icon animation */
+.splash-icon-wrap svg { animation: icon-float 2.4s ease-in-out infinite; }
+
+/* Nav tab active icon scale */
+.nav-tab.active .ico svg { transform: scale(1.15) translateY(-1px); }
+.nav-tab .ico svg { transition: transform 0.25s var(--spring); }
 
 /* ── SPLASH ── */
 #splash {
@@ -198,6 +256,10 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   0%,100% { transform: scale(1); opacity: 0.4; }
   50%      { transform: scale(1.04); opacity: 0.8; }
 }
+.splash-icon-wrap {
+  color: var(--teal);
+  display: flex; align-items: center; justify-content: center;
+}
 .splash-wordmark { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; color: #F0F4FF; }
 .splash-wordmark span { color: var(--teal); }
 .splash-tagline { font-size: 12px; color: rgba(240,244,255,0.35); letter-spacing: 2px; text-transform: uppercase; }
@@ -225,7 +287,10 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   border: 1px solid rgba(0,229,195,0.25);
   border-radius: 9px;
   display: flex; align-items: center; justify-content: center;
+  color: var(--teal);
+  transition: box-shadow var(--mid);
 }
+.topbar-mark:hover { box-shadow: 0 0 0 4px rgba(0,229,195,0.10); }
 .topbar-title { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; color: var(--text); }
 .topbar-actions { display: flex; gap: 6px; }
 
@@ -234,10 +299,15 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   background: var(--input-bg);
   border: 1px solid var(--border);
   display: flex; align-items: center; justify-content: center;
-  transition: background var(--fast) var(--ease), border-color var(--fast) var(--ease), transform var(--fast) var(--ease);
+  color: var(--icon-color);
+  transition: background var(--fast) var(--ease), border-color var(--fast) var(--ease),
+              transform var(--fast) var(--ease), color var(--fast);
 }
-.icon-btn:hover { background: var(--hover); border-color: var(--border2); }
+.icon-btn:hover { background: var(--hover); border-color: var(--border2); color: var(--text); }
 .icon-btn:active { transform: scale(0.91); background: var(--active); }
+
+/* Settings gear spin on hover */
+#settingsBtn:hover .ico svg { animation: icon-spin 0.7s var(--ease); }
 
 /* ── INSTALL BANNER ── */
 #installBanner {
@@ -257,6 +327,7 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   background: var(--teal); color: #080C18;
   white-space: nowrap; flex-shrink: 0;
   box-shadow: var(--shadow-teal);
+  display: flex; align-items: center; gap: 5px;
   transition: transform var(--fast) var(--ease), opacity var(--fast);
 }
 .install-banner-btn:active { transform: scale(0.95); }
@@ -292,14 +363,10 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   padding: 6px 18px; border-radius: var(--r);
   transition: background var(--fast) var(--ease);
   position: relative; min-width: 72px;
+  color: var(--icon-color-muted);
 }
 .nav-tab:active { background: var(--active); }
-.nav-icon-wrap {
-  width: 26px; height: 26px;
-  display: flex; align-items: center; justify-content: center;
-  transition: transform var(--mid) var(--spring);
-}
-.nav-tab.active .nav-icon-wrap { transform: scale(1.15) translateY(-1px); }
+.nav-tab.active { color: var(--teal); }
 .nav-label {
   font-size: 9.5px; font-weight: 600; letter-spacing: 0.2px;
   color: var(--text3);
@@ -323,19 +390,13 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 }
 .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-/* ================================================================
-   BUDGET PAGE
-   ================================================================ */
-
 /* ── BALANCE HERO ── */
 .balance-hero {
   border-radius: var(--r-lg);
   background: var(--card);
   border: 1px solid var(--border2);
   padding: 20px 20px 16px;
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 12px;
+  position: relative; overflow: hidden; margin-bottom: 12px;
   box-shadow: var(--shadow);
 }
 [data-theme="dark"] .balance-hero {
@@ -345,32 +406,25 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   position: absolute;
   width: 220px; height: 220px;
   background: radial-gradient(circle, rgba(0,229,195,0.10) 0%, transparent 70%);
-  top: -60px; right: -40px;
-  pointer-events: none;
+  top: -60px; right: -40px; pointer-events: none;
 }
 .hero-top { display: flex; align-items: flex-start; justify-content: space-between; position: relative; z-index: 2; }
 .hero-eyebrow {
   font-size: 10.5px; font-weight: 700; text-transform: uppercase;
   letter-spacing: 1.4px; color: var(--teal); margin-bottom: 6px;
-  display: flex; align-items: center; gap: 5px;
+  display: flex; align-items: center; gap: 6px;
 }
-.hero-eyebrow::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--teal); display: inline-block; }
 .hero-balance {
   font-size: 42px; font-weight: 800; letter-spacing: -2px; line-height: 1;
   color: var(--text); font-variant-numeric: tabular-nums;
 }
 .hero-balance.negative { color: var(--expense); }
 .hero-sub { font-size: 11.5px; color: var(--text3); margin-top: 6px; }
-
 .hero-delta {
   display: flex; align-items: center; gap: 5px;
-  padding: 5px 10px;
-  border-radius: var(--r-sm);
-  border: 1px solid var(--border2);
-  background: var(--input-bg);
-  font-size: 12px; font-weight: 700;
-  white-space: nowrap; flex-shrink: 0;
-  margin-top: 4px;
+  padding: 5px 10px; border-radius: var(--r-sm);
+  border: 1px solid var(--border2); background: var(--input-bg);
+  font-size: 12px; font-weight: 700; white-space: nowrap; flex-shrink: 0; margin-top: 4px;
 }
 .hero-delta.pos { background: var(--income-bg); border-color: var(--income-bd); color: var(--income); }
 .hero-delta.neg { background: var(--expense-bg); border-color: var(--expense-bd); color: var(--expense); }
@@ -384,37 +438,33 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 /* CTA buttons in hero */
 .hero-actions { display: flex; gap: 8px; position: relative; z-index: 2; }
 .hero-cta {
-  flex: 1; padding: 10px 8px;
-  border-radius: var(--r-sm);
+  flex: 1; padding: 10px 8px; border-radius: var(--r-sm);
   font-size: 12px; font-weight: 700;
-  display: flex; align-items: center; justify-content: center; gap: 5px;
-  transition: transform var(--fast) var(--ease), opacity var(--fast);
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  transition: transform var(--fast) var(--ease), opacity var(--fast), box-shadow var(--fast);
   border: 1px solid transparent;
 }
 .hero-cta:active { transform: scale(0.95); opacity: 0.85; }
 .hero-cta.expense { background: var(--expense-bg); color: var(--expense); border-color: var(--expense-bd); }
 .hero-cta.income  { background: var(--income-bg);  color: var(--income);  border-color: var(--income-bd); }
 .hero-cta.pend    { background: var(--pending-bg); color: var(--pending); border-color: var(--pending-bd); }
+.hero-cta:hover   { transform: translateY(-1px); }
+.hero-cta.expense:hover { box-shadow: 0 4px 16px rgba(255,107,107,0.22); }
+.hero-cta.income:hover  { box-shadow: 0 4px 16px rgba(52,211,153,0.22); }
+.hero-cta.pend:hover    { box-shadow: 0 4px 16px rgba(251,191,36,0.20); }
 
 /* ── SUMMARY ROW ── */
 .summary-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
 .sum-card {
-  border-radius: var(--r);
-  background: var(--card);
-  border: 1px solid var(--border);
-  padding: 13px 10px 11px;
-  text-align: center;
-  transition: transform var(--fast) var(--ease);
+  border-radius: var(--r); background: var(--card); border: 1px solid var(--border);
+  padding: 13px 10px 11px; text-align: center;
+  transition: transform var(--fast) var(--ease), box-shadow var(--fast);
 }
 .sum-card:active { transform: scale(0.97); }
-.sum-icon {
-  width: 30px; height: 30px; margin: 0 auto 7px;
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-}
-.sum-card.inc .sum-icon { background: var(--income-bg); }
-.sum-card.exp .sum-icon { background: var(--expense-bg); }
-.sum-card.pnd .sum-icon { background: var(--pending-bg); }
+.sum-icon { width: 30px; height: 30px; margin: 0 auto 7px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.sum-card.inc .sum-icon { background: var(--income-bg); color: var(--income); }
+.sum-card.exp .sum-icon { background: var(--expense-bg); color: var(--expense); }
+.sum-card.pnd .sum-icon { background: var(--pending-bg); color: var(--pending); }
 .sum-val { font-size: 14px; font-weight: 800; letter-spacing: -0.3px; font-variant-numeric: tabular-nums; }
 .sum-card.inc .sum-val { color: var(--income); }
 .sum-card.exp .sum-val { color: var(--expense); }
@@ -429,18 +479,17 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   transition: transform var(--fast);
 }
 .stat-card:active { transform: scale(0.97); }
-.stat-eyebrow { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text3); margin-bottom: 5px; }
+.stat-eyebrow { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text3); margin-bottom: 5px; display: flex; align-items: center; gap: 5px; }
 .stat-val { font-size: 19px; font-weight: 800; letter-spacing: -0.4px; font-variant-numeric: tabular-nums; }
 .stat-sub { font-size: 10px; color: var(--text3); margin-top: 2px; }
 
 /* ── BUDGET BAR ── */
 .budget-bar-card {
   background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--r); padding: 14px;
-  margin-bottom: 12px;
+  border-radius: var(--r); padding: 14px; margin-bottom: 12px;
 }
 .budget-bar-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-.budget-bar-label { font-size: 13px; font-weight: 600; color: var(--text2); display: flex; align-items: center; gap: 6px; }
+.budget-bar-label { font-size: 13px; font-weight: 600; color: var(--text2); display: flex; align-items: center; gap: 7px; }
 .budget-pct { font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--teal); }
 .budget-pct.warn { color: var(--pending); }
 .budget-pct.over { color: var(--expense); }
@@ -460,65 +509,66 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   border-radius: var(--r-sm); font-size: 13.5px; color: var(--text);
   transition: border-color var(--fast), box-shadow var(--fast);
 }
-.search-input:focus {
-  border-color: var(--teal);
-  box-shadow: 0 0 0 3px var(--teal-dim);
-}
+.search-input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px var(--teal-dim); }
 .search-input::placeholder { color: var(--text3); }
-.search-ico { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; opacity: 0.45; }
+.search-ico {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  pointer-events: none; color: var(--icon-color-muted);
+}
 
 .chips { display: flex; gap: 6px; margin-bottom: 10px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
 .chips::-webkit-scrollbar { display: none; }
 .chip {
-  padding: 5px 12px; border-radius: 20px;
-  font-size: 11.5px; font-weight: 600;
+  padding: 5px 12px; border-radius: 20px; font-size: 11.5px; font-weight: 600;
   background: var(--card); border: 1px solid var(--border);
   color: var(--text2); white-space: nowrap;
   transition: all var(--fast) var(--ease);
-  display: flex; align-items: center; gap: 4px;
+  display: flex; align-items: center; gap: 5px;
 }
 .chip.active { background: var(--teal-dim); border-color: rgba(0,229,195,0.35); color: var(--teal); }
 .chip:active { transform: scale(0.95); }
 
+/* chip color dots */
+.chip-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  flex-shrink: 0;
+}
+.chip[data-filter="received"] .chip-dot { background: var(--income); }
+.chip[data-filter="spent"] .chip-dot { background: var(--expense); }
+.chip[data-filter="pending"] .chip-dot { background: var(--pending); }
+
 /* ── TRANSACTION LIST ── */
 .tx-list { display: flex; flex-direction: column; gap: 7px; }
-
 .tx-item {
   display: flex; align-items: center; gap: 11px;
   background: var(--card); border: 1px solid var(--border);
   border-radius: var(--r); padding: 12px 12px;
   cursor: pointer;
-  transition: background var(--fast), border-color var(--fast), transform var(--fast);
+  transition: background var(--fast), border-color var(--fast), transform var(--fast), box-shadow var(--fast);
   animation: slide-in 0.22s var(--ease);
   position: relative; overflow: hidden;
 }
 .tx-item::before {
-  content: '';
-  position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
   border-radius: 3px 0 0 3px;
 }
 .tx-item.received::before { background: var(--income); }
 .tx-item.spent::before    { background: var(--expense); }
 .tx-item.pending::before  { background: var(--pending); }
+.tx-item:hover { border-color: var(--border2); }
 .tx-item:active { background: var(--active); transform: scale(0.992); }
 @keyframes slide-in { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: translateX(0); } }
 
-.tx-icon {
-  width: 40px; height: 40px; border-radius: 11px;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-.tx-icon.received { background: var(--income-bg); }
-.tx-icon.spent    { background: var(--expense-bg); }
-.tx-icon.pending  { background: var(--pending-bg); }
+.tx-icon { width: 40px; height: 40px; border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.tx-icon.received { background: var(--income-bg); color: var(--income); }
+.tx-icon.spent    { background: var(--expense-bg); color: var(--expense); }
+.tx-icon.pending  { background: var(--pending-bg); color: var(--pending); }
 
 .tx-info { flex: 1; min-width: 0; }
 .tx-name { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tx-meta { display: flex; align-items: center; gap: 6px; margin-top: 2px; }
 .tx-date { font-size: 10px; color: var(--text3); }
-.tx-badge {
-  font-size: 9px; font-weight: 700; padding: 1px 6px;
-  border-radius: 10px; text-transform: uppercase; letter-spacing: 0.3px;
-}
+.tx-badge { font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.3px; }
 .tx-badge.received { background: var(--income-bg); color: var(--income); }
 .tx-badge.spent    { background: var(--expense-bg); color: var(--expense); }
 .tx-badge.pending  { background: var(--pending-bg); color: var(--pending); }
@@ -531,13 +581,14 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 
 .tx-btns { display: flex; gap: 5px; }
 .tx-btn {
-  width: 26px; height: 26px; border-radius: 7px;
+  width: 27px; height: 27px; border-radius: 7px;
   display: flex; align-items: center; justify-content: center;
-  transition: transform var(--fast), opacity var(--fast);
+  transition: transform var(--fast), opacity var(--fast), box-shadow var(--fast);
 }
-.tx-btn.edit   { background: var(--blue-bg); }
-.tx-btn.cycle  { background: var(--pending-bg); }
-.tx-btn.del    { background: var(--expense-bg); }
+.tx-btn.edit   { background: var(--blue-bg);  color: var(--blue); }
+.tx-btn.cycle  { background: var(--pending-bg); color: var(--pending); }
+.tx-btn.del    { background: var(--expense-bg); color: var(--expense); }
+.tx-btn:hover  { transform: translateY(-1px); }
 .tx-btn:active { transform: scale(0.86); opacity: 0.8; }
 
 /* ── EMPTY STATE ── */
@@ -545,27 +596,18 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   padding: 48px 22px; text-align: center; gap: 9px;
 }
-.empty-ico { opacity: 0.25; margin-bottom: 4px; }
+.empty-ico { opacity: 0.22; margin-bottom: 4px; color: var(--text3); }
 .empty-title { font-size: 15px; font-weight: 700; color: var(--text2); }
 .empty-sub { font-size: 12.5px; color: var(--text3); line-height: 1.55; max-width: 230px; }
 
-/* ================================================================
-   CALCULATOR PAGE
-   ================================================================ */
+/* ── CALCULATOR PAGE ── */
 .calc-screen {
-  border-radius: var(--r-lg);
-  background: var(--card);
-  border: 1px solid var(--border);
-  padding: 20px 18px 16px;
-  margin-bottom: 12px;
-  min-height: 116px;
-  display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end;
-  position: relative; overflow: hidden;
-  box-shadow: var(--shadow);
+  border-radius: var(--r-lg); background: var(--card); border: 1px solid var(--border);
+  padding: 20px 18px 16px; margin-bottom: 12px;
+  min-height: 116px; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end;
+  position: relative; overflow: hidden; box-shadow: var(--shadow);
 }
-[data-theme="dark"] .calc-screen {
-  background: linear-gradient(145deg, #0D1832, #111F38);
-}
+[data-theme="dark"] .calc-screen { background: linear-gradient(145deg, #0D1832, #111F38); }
 .calc-screen-orb {
   position: absolute; inset: 0;
   background: radial-gradient(ellipse at 10% 100%, rgba(0,229,195,0.06) 0%, transparent 60%);
@@ -575,11 +617,12 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   position: absolute; top: 12px; left: 12px;
   font-size: 11px; color: var(--text2);
   background: var(--input-bg); border: 1px solid var(--border2);
-  border-radius: 8px; padding: 4px 10px;
-  display: flex; align-items: center; gap: 4px; font-weight: 600;
+  border-radius: 8px; padding: 5px 10px;
+  display: flex; align-items: center; gap: 5px; font-weight: 600;
   transition: background var(--fast), border-color var(--fast), transform var(--fast);
   z-index: 2;
 }
+.calc-hist-btn:hover { background: var(--hover); border-color: var(--border3); }
 .calc-hist-btn:active { transform: scale(0.94); }
 .calc-expr { font-size: 13px; color: var(--text3); min-height: 18px; text-align: right; word-break: break-all; position: relative; z-index: 1; }
 .calc-result {
@@ -591,7 +634,6 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 }
 .calc-result.error { color: var(--expense); font-size: 26px; }
 
-/* Calc history panel */
 .calc-hist-panel { max-height: 0; overflow: hidden; transition: max-height var(--slow) var(--ease); }
 .calc-hist-panel.open { max-height: 260px; }
 .calc-hist-inner { padding: 4px 0 10px; display: flex; flex-direction: column; gap: 5px; }
@@ -604,10 +646,9 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 .hist-item:active { background: var(--active); }
 .hist-expr { font-size: 12px; color: var(--text2); }
 .hist-res { font-size: 13.5px; font-weight: 800; color: var(--teal); font-variant-numeric: tabular-nums; }
-.hist-clear { text-align: center; font-size: 12px; color: var(--expense); font-weight: 700; padding: 7px; transition: opacity var(--fast); }
+.hist-clear { text-align: center; font-size: 12px; color: var(--expense); font-weight: 700; padding: 7px; transition: opacity var(--fast); display: flex; align-items: center; justify-content: center; gap: 5px; }
 .hist-clear:active { opacity: 0.65; }
 
-/* Calc grid */
 .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; }
 .calc-btn {
   aspect-ratio: 1; border-radius: var(--r);
@@ -618,11 +659,7 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   user-select: none; box-shadow: var(--shadow-sm);
   position: relative; overflow: hidden;
 }
-.calc-btn::after {
-  content: ''; position: absolute; inset: 0;
-  background: white; opacity: 0; border-radius: inherit;
-  transition: opacity 0.1s;
-}
+.calc-btn::after { content: ''; position: absolute; inset: 0; background: white; opacity: 0; border-radius: inherit; transition: opacity 0.1s; }
 .calc-btn:active::after { opacity: 0.04; }
 .calc-btn:active { transform: scale(0.90); }
 .calc-btn.num { color: var(--text); }
@@ -631,21 +668,16 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 .calc-btn.action { background: var(--input-bg); color: var(--text2); }
 .calc-btn.equal {
   background: var(--teal); color: #080C18;
-  border-color: transparent;
-  box-shadow: var(--shadow-teal);
-  font-size: 22px;
+  border-color: transparent; box-shadow: var(--shadow-teal); font-size: 22px;
 }
-.calc-btn.equal:active { box-shadow: 0 2px 8px rgba(0,229,195,0.15); background: color-mix(in srgb, var(--teal) 85%, white); }
+.calc-btn.equal:active { box-shadow: 0 2px 8px rgba(0,229,195,0.15); }
 .calc-btn.wide { grid-column: span 2; aspect-ratio: unset; padding: 0 18px; height: 58px; }
 .calc-btn.del-btn { background: var(--expense-bg); color: var(--expense); border-color: var(--expense-bd); }
 .calc-btn.pct-btn { background: var(--pending-bg); color: var(--pending); border-color: var(--pending-bd); }
 
-/* ================================================================
-   NOTES PAGE
-   ================================================================ */
+/* ── NOTES PAGE ── */
 .notes-new-btn {
-  width: 100%; padding: 13px;
-  border-radius: var(--r);
+  width: 100%; padding: 13px; border-radius: var(--r);
   background: var(--teal); color: #080C18;
   font-size: 14px; font-weight: 700;
   display: flex; align-items: center; justify-content: center; gap: 8px;
@@ -653,36 +685,37 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   transition: transform var(--fast), opacity var(--fast), box-shadow var(--fast);
   margin-bottom: 12px;
 }
+.notes-new-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(0,229,195,0.28); }
 .notes-new-btn:active { transform: scale(0.98); opacity: 0.9; }
 
 .notes-list { display: flex; flex-direction: column; gap: 8px; }
 .note-card {
   background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--r); padding: 14px;
-  cursor: pointer;
-  transition: background var(--fast), border-color var(--fast), transform var(--fast);
+  border-radius: var(--r); padding: 14px; cursor: pointer;
+  transition: background var(--fast), border-color var(--fast), transform var(--fast), box-shadow var(--fast);
   animation: slide-in 0.22s var(--ease);
   position: relative; overflow: hidden;
 }
 .note-card::after {
-  content: '';
-  position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
   background: var(--teal); border-radius: 3px 0 0 3px;
   opacity: 0; transition: opacity var(--mid);
 }
 .note-card:hover::after { opacity: 0.6; }
+.note-card:hover { border-color: var(--border2); }
 .note-card:active { background: var(--active); transform: scale(0.99); }
 
 .note-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
 .note-title { font-size: 14px; font-weight: 700; line-height: 1.3; flex: 1; }
 .note-acts { display: flex; gap: 5px; flex-shrink: 0; }
 .note-act {
-  width: 26px; height: 26px; border-radius: 7px;
+  width: 27px; height: 27px; border-radius: 7px;
   display: flex; align-items: center; justify-content: center;
-  transition: transform var(--fast);
+  transition: transform var(--fast), box-shadow var(--fast);
 }
-.note-act.edit { background: var(--blue-bg); }
-.note-act.del  { background: var(--expense-bg); }
+.note-act.edit { background: var(--blue-bg); color: var(--blue); }
+.note-act.del  { background: var(--expense-bg); color: var(--expense); }
+.note-act:hover { transform: translateY(-1px); }
 .note-act:active { transform: scale(0.86); }
 
 .note-body {
@@ -698,9 +731,7 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   padding: 2px 7px; text-transform: uppercase; letter-spacing: 0.3px;
 }
 
-/* ================================================================
-   SHEETS / OVERLAYS
-   ================================================================ */
+/* ── SHEETS / OVERLAYS ── */
 .overlay {
   position: fixed; inset: 0;
   background: rgba(0,0,0,0.60);
@@ -710,7 +741,6 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   opacity: 0; transition: opacity var(--mid) var(--ease);
 }
 .overlay.open { display: flex; opacity: 1; }
-
 .sheet {
   width: 100%; max-width: 480px;
   background: var(--sheet-bg);
@@ -722,7 +752,6 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   max-height: 93dvh; overflow-y: auto;
 }
 .overlay.open .sheet { transform: translateY(0); }
-
 .sheet-handle { width: 32px; height: 3px; background: var(--border2); border-radius: 2px; margin: 10px auto 0; }
 .sheet-hd {
   padding: 14px 18px 12px; border-bottom: 1px solid var(--border);
@@ -735,9 +764,10 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   width: 28px; height: 28px; border-radius: 50%;
   background: var(--input-bg); border: 1px solid var(--border2);
   display: flex; align-items: center; justify-content: center;
-  font-size: 12px; color: var(--text2);
-  transition: background var(--fast), transform var(--fast);
+  color: var(--icon-color);
+  transition: background var(--fast), transform var(--fast), color var(--fast);
 }
+.sheet-close:hover { color: var(--text); background: var(--hover); }
 .sheet-close:active { transform: scale(0.90); background: var(--active); }
 .sheet-body { padding: 14px 18px 24px; display: flex; flex-direction: column; gap: 13px; }
 
@@ -750,22 +780,16 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   border-radius: var(--r-sm); font-size: 14px; color: var(--text);
   transition: border-color var(--fast), box-shadow var(--fast), background var(--fast);
 }
-.field-input:focus {
-  border-color: var(--teal);
-  background: var(--input-focus);
-  box-shadow: 0 0 0 3px var(--teal-dim);
-}
+.field-input:focus { border-color: var(--teal); background: var(--input-focus); box-shadow: 0 0 0 3px var(--teal-dim); }
 .field-input::placeholder { color: var(--text3); }
 .field-input.err { border-color: var(--expense); }
 .field-textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
 .char-c { font-size: 10px; color: var(--text3); text-align: right; margin-top: 3px; }
 
-/* Type toggle */
 .type-row { display: flex; gap: 7px; }
 .type-btn {
-  flex: 1; padding: 10px;
-  border-radius: var(--r-sm); font-size: 12.5px; font-weight: 700;
-  display: flex; align-items: center; justify-content: center; gap: 5px;
+  flex: 1; padding: 10px; border-radius: var(--r-sm); font-size: 12.5px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
   border: 1.5px solid var(--border2); background: var(--input-bg); color: var(--text2);
   transition: all var(--fast) var(--ease);
 }
@@ -774,25 +798,22 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 .type-btn.pending.active{ background: var(--pending-bg); border-color: var(--pending-bd); color: var(--pending); }
 
 .submit-btn {
-  width: 100%; padding: 13px;
-  border-radius: var(--r-sm);
+  width: 100%; padding: 13px; border-radius: var(--r-sm);
   background: var(--teal); color: #080C18;
   font-size: 14px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
   box-shadow: var(--shadow-teal);
   transition: transform var(--fast), opacity var(--fast), box-shadow var(--fast);
 }
+.submit-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(0,229,195,0.28); }
 .submit-btn:active { transform: scale(0.98); opacity: 0.9; }
 
 /* ── SETTINGS ── */
-.settings-group {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--r); overflow: hidden;
-}
-.setting-row {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 13px 14px; border-bottom: 1px solid var(--border);
-}
+.settings-group { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+.setting-row { display: flex; align-items: center; justify-content: space-between; padding: 13px 14px; border-bottom: 1px solid var(--border); gap: 10px; }
 .setting-row:last-child { border-bottom: none; }
+.setting-left { display: flex; align-items: center; gap: 9px; }
+.setting-ico { width: 30px; height: 30px; border-radius: 8px; background: var(--input-bg); border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; color: var(--icon-color); flex-shrink: 0; }
 .setting-info .s-name { font-size: 14px; font-weight: 600; }
 .setting-info .s-hint { font-size: 11px; color: var(--text3); margin-top: 1px; }
 
@@ -808,14 +829,14 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 
 .ie-row { display: flex; gap: 7px; }
 .ie-btn {
-  flex: 1; padding: 10px;
-  border-radius: var(--r-sm);
+  flex: 1; padding: 10px; border-radius: var(--r-sm);
   background: var(--input-bg); border: 1px solid var(--border);
   font-size: 12px; font-weight: 700; color: var(--text2);
-  display: flex; align-items: center; justify-content: center; gap: 5px;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
   transition: all var(--fast);
 }
 .ie-btn:active { transform: scale(0.97); background: var(--active); }
+.ie-btn:hover { transform: translateY(-1px); }
 .ie-btn.exp { color: var(--income); border-color: var(--income-bd); background: var(--income-bg); }
 .ie-btn.imp { color: var(--blue);   border-color: var(--blue-bg);   background: var(--blue-bg); }
 
@@ -831,6 +852,7 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   font-size: 12px; font-weight: 700;
   background: var(--teal); color: #080C18;
   white-space: nowrap; flex-shrink: 0;
+  display: flex; align-items: center; gap: 5px;
   box-shadow: var(--shadow-teal);
   transition: transform var(--fast), opacity var(--fast);
 }
@@ -855,11 +877,19 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   box-shadow: var(--shadow-lg);
 }
 .confirm-overlay.open .confirm-box { transform: scale(1); }
-.confirm-ico { font-size: 40px; margin-bottom: 12px; }
+.confirm-ico-wrap {
+  width: 56px; height: 56px; border-radius: 16px;
+  margin: 0 auto 14px;
+  display: flex; align-items: center; justify-content: center;
+  animation: icon-bounce-in 0.35s var(--spring) both;
+}
+.confirm-ico-wrap.danger  { background: var(--expense-bg); color: var(--expense); }
+.confirm-ico-wrap.warning { background: var(--pending-bg); color: var(--pending); }
+.confirm-ico-wrap.info    { background: var(--teal-dim); color: var(--teal); }
 .confirm-title { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
 .confirm-msg { font-size: 13px; color: var(--text2); line-height: 1.55; }
 .confirm-acts { display: flex; gap: 8px; margin-top: 20px; }
-.confirm-btn { flex: 1; padding: 11px; border-radius: var(--r-sm); font-size: 13px; font-weight: 700; transition: transform var(--fast), opacity var(--fast); }
+.confirm-btn { flex: 1; padding: 11px; border-radius: var(--r-sm); font-size: 13px; font-weight: 700; transition: transform var(--fast), opacity var(--fast); display: flex; align-items: center; justify-content: center; gap: 5px; }
 .confirm-btn.cancel { background: var(--input-bg); border: 1px solid var(--border2); color: var(--text2); }
 .confirm-btn.danger { background: var(--expense); color: white; }
 .confirm-btn:active { transform: scale(0.96); opacity: 0.9; }
@@ -874,13 +904,17 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 .toast {
   background: var(--confirm); border: 1px solid var(--border2);
   border-radius: var(--r); padding: 11px 14px;
-  display: flex; align-items: center; gap: 9px;
+  display: flex; align-items: center; gap: 10px;
   box-shadow: var(--shadow); font-size: 13px; font-weight: 600;
   animation: toast-in 0.28s var(--spring) forwards;
   width: 100%; pointer-events: auto;
 }
 .toast.removing { animation: toast-out 0.2s var(--ease) forwards; }
-.toast-ico { font-size: 16px; flex-shrink: 0; }
+.toast-ico { flex-shrink: 0; display: flex; align-items: center; }
+.toast.success .toast-ico { color: var(--income); }
+.toast.error   .toast-ico { color: var(--expense); }
+.toast.info    .toast-ico { color: var(--teal); }
+.toast.warning .toast-ico { color: var(--pending); }
 .toast.success { border-left: 3px solid var(--income); }
 .toast.error   { border-left: 3px solid var(--expense); }
 .toast.info    { border-left: 3px solid var(--teal); }
@@ -893,8 +927,7 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   position: fixed; inset: 0; background: rgba(0,0,0,0.72);
   backdrop-filter: blur(10px); z-index: 800;
   display: none; align-items: center; justify-content: center;
-  padding: 20px; opacity: 0; transition: opacity var(--mid);
-  overflow-y: auto;
+  padding: 20px; opacity: 0; transition: opacity var(--mid); overflow-y: auto;
 }
 .receipt-overlay.open { display: flex; opacity: 1; }
 .receipt-box {
@@ -911,9 +944,9 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   padding: 22px; text-align: center;
   border-bottom: 1px solid rgba(0,229,195,0.2);
 }
-.receipt-brand { color: white; font-size: 18px; font-weight: 800; letter-spacing: -0.3px; }
+.receipt-brand { color: white; font-size: 18px; font-weight: 800; letter-spacing: -0.3px; display: flex; align-items: center; justify-content: center; gap: 7px; }
 .receipt-brand span { color: #00E5C3; }
-.receipt-brand-sub { color: rgba(240,244,255,0.45); font-size: 10.5px; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 3px; }
+.receipt-brand-sub { color: rgba(240,244,255,0.45); font-size: 10.5px; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 4px; }
 .receipt-body { padding: 18px; color: #0A0F1E; }
 .receipt-amt-area { text-align: center; padding: 16px 0; border-bottom: 1px dashed #e2e8f0; margin-bottom: 14px; }
 .receipt-type-lbl { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: #94a3b8; margin-bottom: 5px; }
@@ -931,14 +964,13 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 .receipt-pill.pending  { background: #fffbeb; color: #D97706; }
 .receipt-foot { padding: 0 18px 18px; display: flex; gap: 8px; }
 .receipt-btn {
-  flex: 1; padding: 11px;
-  border-radius: var(--r-sm); font-size: 12px; font-weight: 700;
-  display: flex; align-items: center; justify-content: center; gap: 5px;
+  flex: 1; padding: 11px; border-radius: var(--r-sm); font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
   transition: transform var(--fast), opacity var(--fast);
 }
-.receipt-btn.share  { background: #25D366; color: white; }
-.receipt-btn.pdf    { background: #060D1E; color: #00E5C3; border: 1px solid rgba(0,229,195,0.3); }
-.receipt-btn.close  { background: #f1f5f9; color: #0A0F1E; }
+.receipt-btn.share { background: #25D366; color: white; }
+.receipt-btn.pdf   { background: #060D1E; color: #00E5C3; border: 1px solid rgba(0,229,195,0.3); }
+.receipt-btn.close { background: #f1f5f9; color: #0A0F1E; }
 .receipt-btn:active { transform: scale(0.96); opacity: 0.9; }
 .receipt-divider { border: none; border-top: 1px dashed #e2e8f0; margin: 4px 0; }
 .receipt-wm { text-align: center; padding: 10px; font-size: 10px; color: #cbd5e1; font-weight: 600; letter-spacing: 1.2px; }
@@ -966,7 +998,13 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 <!-- ── SPLASH ── -->
 <div id="splash">
   <div class="splash-logo-ring">
-    <lord-icon src="https://cdn.lordicon.com/qhviklyi.json" trigger="loop" colors="primary:#00E5C3,secondary:#60A5FA" style="width:52px;height:52px"></lord-icon>
+    <div class="splash-icon-wrap ico ico-56 ico-teal">
+      <!-- Wallet icon -->
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M21 12V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/>
+        <path d="M16 12h5v4h-5a2 2 0 0 1 0-4z"/>
+      </svg>
+    </div>
   </div>
   <div class="splash-wordmark">Pocket<span>Flow</span></div>
   <div class="splash-tagline">Premium Finance Companion</div>
@@ -980,31 +1018,79 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   <header class="topbar">
     <div class="topbar-left">
       <div class="topbar-mark">
-        <lord-icon src="https://cdn.lordicon.com/qhviklyi.json" trigger="hover" colors="primary:#00E5C3,secondary:#60A5FA" style="width:18px;height:18px"></lord-icon>
+        <!-- Wallet icon -->
+        <span class="ico ico-16">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/>
+            <path d="M16 12h5v4h-5a2 2 0 0 1 0-4z"/>
+          </svg>
+        </span>
       </div>
       <span class="topbar-title" id="topbarTitle">Budget</span>
     </div>
     <div class="topbar-actions">
       <button class="icon-btn" id="installIconBtn" title="Install App">
-        <lord-icon src="https://cdn.lordicon.com/pqxdilfs.json" trigger="hover" colors="primary:var(--text2)" style="width:18px;height:18px"></lord-icon>
+        <!-- Download icon -->
+        <span class="ico ico-16">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+        </span>
       </button>
+      <!-- Theme toggle: Moon shown in dark mode, Sun shown in light mode -->
       <button class="icon-btn" id="themeBtn" title="Toggle theme">
-        <lord-icon src="https://cdn.lordicon.com/wtczpqnm.json" trigger="hover" colors="primary:var(--text2)" style="width:18px;height:18px" id="themeIcon"></lord-icon>
+        <!-- Moon icon (visible in dark mode) -->
+        <span class="ico ico-16" id="iconMoon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </span>
+        <!-- Sun icon (visible in light mode) -->
+        <span class="ico ico-16" id="iconSun" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        </span>
       </button>
-      <button class="icon-btn" id="settingsBtn" title="Settings">
-        <lord-icon src="https://cdn.lordicon.com/jgnvfzqg.json" trigger="hover" colors="primary:var(--text2)" style="width:18px;height:18px"></lord-icon>
+      <button class="icon-btn ico-wiggle" id="settingsBtn" title="Settings">
+        <!-- Settings/Gear icon -->
+        <span class="ico ico-16">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </span>
       </button>
     </div>
   </header>
 
   <!-- INSTALL BANNER -->
   <div id="installBanner">
-    <button class="install-banner-dismiss" id="installBannerDismiss">✕</button>
+    <button class="install-banner-dismiss" id="installBannerDismiss">
+      <span class="ico ico-12 ico-text3">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </span>
+    </button>
     <div style="flex:1;min-width:0">
       <div style="font-size:13px;font-weight:700">Install PocketFlow Pro</div>
       <div style="font-size:11px;color:var(--text2);margin-top:1px">Add to home screen for offline access</div>
     </div>
-    <button class="install-banner-btn" id="installBannerBtn">Install</button>
+    <button class="install-banner-btn" id="installBannerBtn">
+      <span class="ico ico-12">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+      </span>
+      Install
+    </button>
   </div>
 
   <!-- ═══════════════ BUDGET PAGE ═══════════════ -->
@@ -1015,7 +1101,16 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
       <div class="hero-teal-orb"></div>
       <div class="hero-top">
         <div>
-          <div class="hero-eyebrow">Current Balance</div>
+          <div class="hero-eyebrow">
+            <!-- Wallet icon small -->
+            <span class="ico ico-12 ico-teal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M21 12V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/>
+                <path d="M16 12h5v4h-5a2 2 0 0 1 0-4z"/>
+              </svg>
+            </span>
+            Current Balance
+          </div>
           <div class="hero-balance" id="heroBalance">₹0.00</div>
           <div class="hero-sub" id="heroSub">Tap ⚙ to set your cash &amp; budget</div>
         </div>
@@ -1030,15 +1125,27 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
       </div>
       <div class="hero-actions">
         <button class="hero-cta expense" id="addSpentBtn">
-          <lord-icon src="https://cdn.lordicon.com/jgnvfzqg.json" trigger="hover" colors="primary:#FF6B6B" style="width:15px;height:15px"></lord-icon>
+          <span class="ico ico-14">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 7 17 17 17"/>
+            </svg>
+          </span>
           Spent
         </button>
         <button class="hero-cta income" id="addGotBtn">
-          <lord-icon src="https://cdn.lordicon.com/qhviklyi.json" trigger="hover" colors="primary:#34D399" style="width:15px;height:15px"></lord-icon>
+          <span class="ico ico-14">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="7" y1="7" x2="17" y2="17"/><polyline points="17 7 17 17 7 17"/>
+            </svg>
+          </span>
           Received
         </button>
         <button class="hero-cta pend" id="addPendingBtn">
-          <lord-icon src="https://cdn.lordicon.com/abfverha.json" trigger="hover" colors="primary:#FBBF24" style="width:15px;height:15px"></lord-icon>
+          <span class="ico ico-14">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </span>
           Pending
         </button>
       </div>
@@ -1048,21 +1155,35 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
     <div class="summary-row">
       <div class="sum-card inc">
         <div class="sum-icon">
-          <lord-icon src="https://cdn.lordicon.com/qhviklyi.json" trigger="loop" delay="2000" colors="primary:#34D399" style="width:18px;height:18px"></lord-icon>
+          <span class="ico ico-16">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+              <polyline points="17 6 23 6 23 12"/>
+            </svg>
+          </span>
         </div>
         <div class="sum-val" id="totalAdded">₹0</div>
         <div class="sum-lbl">Received</div>
       </div>
       <div class="sum-card exp">
         <div class="sum-icon">
-          <lord-icon src="https://cdn.lordicon.com/jgnvfzqg.json" trigger="loop" delay="2500" colors="primary:#FF6B6B" style="width:18px;height:18px"></lord-icon>
+          <span class="ico ico-16">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/>
+              <polyline points="17 18 23 18 23 12"/>
+            </svg>
+          </span>
         </div>
         <div class="sum-val" id="totalSpent">₹0</div>
         <div class="sum-lbl">Spent</div>
       </div>
       <div class="sum-card pnd">
         <div class="sum-icon">
-          <lord-icon src="https://cdn.lordicon.com/abfverha.json" trigger="loop" delay="3000" colors="primary:#FBBF24" style="width:18px;height:18px"></lord-icon>
+          <span class="ico ico-16">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </span>
         </div>
         <div class="sum-val" id="totalPending">₹0</div>
         <div class="sum-lbl">Pending</div>
@@ -1072,12 +1193,33 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
     <!-- Stats -->
     <div class="stat-grid">
       <div class="stat-card">
-        <div class="stat-eyebrow">Daily Average</div>
+        <div class="stat-eyebrow">
+          <span class="ico ico-12 ico-text3">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"/>
+              <line x1="12" y1="20" x2="12" y2="4"/>
+              <line x1="6" y1="20" x2="6" y2="14"/>
+            </svg>
+          </span>
+          Daily Average
+        </div>
         <div class="stat-val" id="dailyAvg">₹0</div>
         <div class="stat-sub">per day spending</div>
       </div>
       <div class="stat-card">
-        <div class="stat-eyebrow">Transactions</div>
+        <div class="stat-eyebrow">
+          <span class="ico ico-12 ico-text3">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="8" y1="6" x2="21" y2="6"/>
+              <line x1="8" y1="12" x2="21" y2="12"/>
+              <line x1="8" y1="18" x2="21" y2="18"/>
+              <line x1="3" y1="6" x2="3.01" y2="6"/>
+              <line x1="3" y1="12" x2="3.01" y2="12"/>
+              <line x1="3" y1="18" x2="3.01" y2="18"/>
+            </svg>
+          </span>
+          Transactions
+        </div>
         <div class="stat-val" id="txCount">0</div>
         <div class="stat-sub">total records</div>
       </div>
@@ -1087,7 +1229,13 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
     <div class="budget-bar-card" id="budgetProgressSection">
       <div class="budget-bar-top">
         <span class="budget-bar-label">
-          <lord-icon src="https://cdn.lordicon.com/abfverha.json" trigger="hover" colors="primary:var(--text2)" style="width:13px;height:13px"></lord-icon>
+          <span class="ico ico-14 ico-text3">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="6"/>
+              <circle cx="12" cy="12" r="2"/>
+            </svg>
+          </span>
           Monthly Budget
         </span>
         <span class="budget-pct" id="budgetPct">—</span>
@@ -1102,24 +1250,31 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
     <!-- Search & Filter -->
     <div class="search-row">
       <div class="search-wrap">
-        <div class="search-ico">
-          <lord-icon src="https://cdn.lordicon.com/kkvxgpti.json" trigger="hover" colors="primary:var(--text3)" style="width:15px;height:15px"></lord-icon>
+        <div class="search-ico ico ico-15">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
         </div>
         <input class="search-input" type="text" id="transSearch" placeholder="Search transactions…">
       </div>
     </div>
     <div class="chips">
       <button class="chip active" data-filter="all">All</button>
-      <button class="chip" data-filter="received">● Received</button>
-      <button class="chip" data-filter="spent">● Spent</button>
-      <button class="chip" data-filter="pending">● Pending</button>
+      <button class="chip" data-filter="received"><span class="chip-dot"></span> Received</button>
+      <button class="chip" data-filter="spent"><span class="chip-dot"></span> Spent</button>
+      <button class="chip" data-filter="pending"><span class="chip-dot"></span> Pending</button>
     </div>
 
     <div class="section-label" id="transCountLabel">Transactions</div>
     <div class="tx-list" id="transList"></div>
     <div id="transEmpty" class="empty-state" style="display:none">
       <div class="empty-ico">
-        <lord-icon src="https://cdn.lordicon.com/qhviklyi.json" trigger="loop" colors="primary:var(--text3)" style="width:56px;height:56px"></lord-icon>
+        <span class="ico ico-56">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" width="56" height="56">
+            <path d="M21 12V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/>
+            <path d="M16 12h5v4h-5a2 2 0 0 1 0-4z"/>
+          </svg>
+        </span>
       </div>
       <div class="empty-title">No transactions yet</div>
       <div class="empty-sub">Record your first income or expense using the buttons above</div>
@@ -1131,7 +1286,11 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
     <div class="calc-screen">
       <div class="calc-screen-orb"></div>
       <button class="calc-hist-btn" id="historyToggle">
-        <lord-icon src="https://cdn.lordicon.com/abfverha.json" trigger="hover" colors="primary:var(--text2)" style="width:12px;height:12px"></lord-icon>
+        <span class="ico ico-12 ico-text2">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/>
+          </svg>
+        </span>
         History
       </button>
       <div class="calc-expr" id="calcExpr"></div>
@@ -1141,13 +1300,29 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
     <div class="calc-hist-panel" id="calcHistoryPanel">
       <div class="section-label" style="margin-top:0">Calculation History</div>
       <div class="calc-hist-inner" id="calcHistoryList"></div>
-      <button class="hist-clear" id="clearHistory">Clear History</button>
+      <button class="hist-clear" id="clearHistory">
+        <span class="ico ico-12">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+            <path d="M10 11v6"/><path d="M14 11v6"/>
+            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+          </svg>
+        </span>
+        Clear History
+      </button>
     </div>
 
     <div class="calc-grid" id="calcGrid">
       <button class="calc-btn action" data-action="clear">AC</button>
       <button class="calc-btn pct-btn" data-action="pct">%</button>
-      <button class="calc-btn del-btn" data-action="del">⌫</button>
+      <button class="calc-btn del-btn" data-action="del">
+        <span class="ico ico-18">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/>
+            <line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/>
+          </svg>
+        </span>
+      </button>
       <button class="calc-btn op" data-op="÷">÷</button>
       <button class="calc-btn num" data-num="7">7</button>
       <button class="calc-btn num" data-num="8">8</button>
@@ -1171,13 +1346,22 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   <!-- ═══════════════ NOTES PAGE ═══════════════ -->
   <div id="pageNotes" class="page">
     <button class="notes-new-btn" id="createNoteBtn">
-      <lord-icon src="https://cdn.lordicon.com/pflnmvrq.json" trigger="hover" colors="primary:#080C18" style="width:17px;height:17px"></lord-icon>
+      <span class="ico ico-16">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="12" y1="18" x2="12" y2="12"/>
+          <line x1="9" y1="15" x2="15" y2="15"/>
+        </svg>
+      </span>
       New Note
     </button>
     <div class="search-row">
       <div class="search-wrap">
-        <div class="search-ico">
-          <lord-icon src="https://cdn.lordicon.com/kkvxgpti.json" trigger="hover" colors="primary:var(--text3)" style="width:15px;height:15px"></lord-icon>
+        <div class="search-ico ico ico-15">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
         </div>
         <input class="search-input" type="text" id="notesSearch" placeholder="Search notes…">
       </div>
@@ -1186,7 +1370,14 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
     <div class="notes-list" id="notesList"></div>
     <div id="notesEmpty" class="empty-state" style="display:none">
       <div class="empty-ico">
-        <lord-icon src="https://cdn.lordicon.com/pflnmvrq.json" trigger="loop" colors="primary:var(--text3)" style="width:56px;height:56px"></lord-icon>
+        <span class="ico ico-56">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" width="56" height="56">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+        </span>
       </div>
       <div class="empty-title">No notes yet</div>
       <div class="empty-sub">Create your first note to start capturing ideas</div>
@@ -1200,21 +1391,47 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   <div class="nav-inner">
     <button class="nav-tab active" data-tab="budget">
       <div class="nav-icon-wrap">
-        <lord-icon src="https://cdn.lordicon.com/qhviklyi.json" trigger="hover" colors="primary:var(--teal)" style="width:22px;height:22px"></lord-icon>
+        <span class="ico ico-22">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M21 12V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/>
+            <path d="M16 12h5v4h-5a2 2 0 0 1 0-4z"/>
+          </svg>
+        </span>
       </div>
       <span class="nav-label">Budget</span>
       <span class="nav-pip"></span>
     </button>
     <button class="nav-tab" data-tab="calc">
       <div class="nav-icon-wrap">
-        <lord-icon src="https://cdn.lordicon.com/abfverha.json" trigger="hover" colors="primary:var(--text3)" style="width:22px;height:22px"></lord-icon>
+        <span class="ico ico-22">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <rect x="4" y="2" width="16" height="20" rx="2"/>
+            <line x1="8" y1="6" x2="16" y2="6"/>
+            <line x1="8" y1="10" x2="8" y2="10" stroke-linecap="round" stroke-width="2.5"/>
+            <line x1="12" y1="10" x2="12" y2="10" stroke-linecap="round" stroke-width="2.5"/>
+            <line x1="16" y1="10" x2="16" y2="10" stroke-linecap="round" stroke-width="2.5"/>
+            <line x1="8" y1="14" x2="8" y2="14" stroke-linecap="round" stroke-width="2.5"/>
+            <line x1="12" y1="14" x2="12" y2="14" stroke-linecap="round" stroke-width="2.5"/>
+            <line x1="16" y1="14" x2="16" y2="14" stroke-linecap="round" stroke-width="2.5"/>
+            <line x1="8" y1="18" x2="8" y2="18" stroke-linecap="round" stroke-width="2.5"/>
+            <line x1="12" y1="18" x2="16" y2="18" stroke-linecap="round" stroke-width="2.5"/>
+          </svg>
+        </span>
       </div>
       <span class="nav-label">Calculator</span>
       <span class="nav-pip"></span>
     </button>
     <button class="nav-tab" data-tab="notes">
       <div class="nav-icon-wrap">
-        <lord-icon src="https://cdn.lordicon.com/pflnmvrq.json" trigger="hover" colors="primary:var(--text3)" style="width:22px;height:22px"></lord-icon>
+        <span class="ico ico-22">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+        </span>
       </div>
       <span class="nav-label">Notes</span>
       <span class="nav-pip"></span>
@@ -1229,15 +1446,42 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
     <div class="sheet-hd">
       <div class="sheet-title" id="transSheetTitle">Add Transaction</div>
       <div class="sheet-sub" id="transSheetSub">Record your income or expense</div>
-      <button class="sheet-close" id="transClose">✕</button>
+      <button class="sheet-close" id="transClose">
+        <span class="ico ico-14">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </span>
+      </button>
     </div>
     <div class="sheet-body">
       <div class="field">
         <div class="field-lbl">Transaction Type</div>
         <div class="type-row">
-          <button class="type-btn spent active" id="typeSpent">Spent</button>
-          <button class="type-btn added" id="typeAdded">Received</button>
-          <button class="type-btn pending" id="typePending">Pending</button>
+          <button class="type-btn spent active" id="typeSpent">
+            <span class="ico ico-14">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 7 17 17 17"/>
+              </svg>
+            </span>
+            Spent
+          </button>
+          <button class="type-btn added" id="typeAdded">
+            <span class="ico ico-14">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="7" y1="7" x2="17" y2="17"/><polyline points="17 7 17 17 7 17"/>
+              </svg>
+            </span>
+            Received
+          </button>
+          <button class="type-btn pending" id="typePending">
+            <span class="ico ico-14">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </span>
+            Pending
+          </button>
         </div>
       </div>
       <div class="field">
@@ -1253,7 +1497,16 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
         <input type="datetime-local" class="field-input" id="transDateTime">
       </div>
       <input type="hidden" id="transEditId">
-      <button class="submit-btn" id="transSave">Save Transaction</button>
+      <button class="submit-btn" id="transSave">
+        <span class="ico ico-16">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/>
+            <polyline points="7 3 7 8 15 8"/>
+          </svg>
+        </span>
+        Save Transaction
+      </button>
     </div>
   </div>
 </div>
@@ -1264,7 +1517,13 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
     <div class="sheet-handle"></div>
     <div class="sheet-hd">
       <div class="sheet-title" id="noteSheetTitle">New Note</div>
-      <button class="sheet-close" id="noteClose">✕</button>
+      <button class="sheet-close" id="noteClose">
+        <span class="ico ico-14">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </span>
+      </button>
     </div>
     <div class="sheet-body">
       <div class="field">
@@ -1277,7 +1536,16 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
         <div class="char-c"><span id="charCount">0</span>/5000</div>
       </div>
       <input type="hidden" id="noteEditId">
-      <button class="submit-btn" id="noteSave">Save Note</button>
+      <button class="submit-btn" id="noteSave">
+        <span class="ico ico-16">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/>
+            <polyline points="7 3 7 8 15 8"/>
+          </svg>
+        </span>
+        Save Note
+      </button>
     </div>
   </div>
 </div>
@@ -1289,7 +1557,13 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
     <div class="sheet-hd">
       <div class="sheet-title">Settings</div>
       <div class="sheet-sub">Configure PocketFlow Pro</div>
-      <button class="sheet-close" id="settingsClose">✕</button>
+      <button class="sheet-close" id="settingsClose">
+        <span class="ico ico-14">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </span>
+      </button>
     </div>
     <div class="sheet-body">
 
@@ -1303,15 +1577,35 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
           <div class="field-lbl">Monthly Budget Limit</div>
           <input type="number" class="field-input" id="settingsBudget" placeholder="Enter monthly budget" min="0" step="0.01">
         </div>
-        <button class="submit-btn" id="saveBudgetSettings">Save Budget Settings</button>
+        <button class="submit-btn" id="saveBudgetSettings">
+          <span class="ico ico-16">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+              <polyline points="17 21 17 13 7 13 7 21"/>
+              <polyline points="7 3 7 8 15 8"/>
+            </svg>
+          </span>
+          Save Budget Settings
+        </button>
       </div>
 
       <div class="section-label">Currency</div>
       <div class="settings-group">
         <div class="setting-row">
-          <div class="setting-info">
-            <div class="s-name">Currency Symbol</div>
-            <div class="s-hint">Displayed before amounts</div>
+          <div class="setting-left">
+            <div class="setting-ico">
+              <span class="ico ico-14">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                  <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+              </span>
+            </div>
+            <div class="setting-info">
+              <div class="s-name">Currency Symbol</div>
+              <div class="s-hint">Displayed before amounts</div>
+            </div>
           </div>
           <select class="field-input" id="currencySelect" style="width:90px;padding:7px 9px;font-size:13px;border-radius:var(--r-sm)">
             <option value="₹">₹ INR</option>
@@ -1332,7 +1626,16 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
             <div class="s-name" id="installSettingsTitle">Install PocketFlow Pro</div>
             <div class="s-hint" id="installSettingsSub">Install on your device for offline access.</div>
           </div>
-          <button class="install-cta" id="installSettingsBtn">Install</button>
+          <button class="install-cta" id="installSettingsBtn">
+            <span class="ico ico-12">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+            </span>
+            Install
+          </button>
         </div>
         <div class="install-note">Chrome &amp; Edge on Android/Desktop. iOS Safari: tap Share → Add to Home Screen.</div>
       </div>
@@ -1341,17 +1644,35 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
       <div class="card" style="display:flex;flex-direction:column;gap:10px">
         <div class="ie-row">
           <button class="ie-btn exp" id="exportBtn">
-            <lord-icon src="https://cdn.lordicon.com/qhviklyi.json" trigger="hover" colors="primary:#34D399" style="width:14px;height:14px"></lord-icon>
+            <span class="ico ico-14">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+            </span>
             Export JSON
           </button>
           <button class="ie-btn imp" id="importBtn">
-            <lord-icon src="https://cdn.lordicon.com/pqxdilfs.json" trigger="hover" colors="primary:#60A5FA" style="width:14px;height:14px"></lord-icon>
+            <span class="ico ico-14">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+            </span>
             Import JSON
           </button>
           <input type="file" id="importFile" accept=".json" style="display:none">
         </div>
-        <button class="submit-btn" id="resetAllBtn"
-          style="background:var(--expense);box-shadow:0 4px 16px rgba(255,107,107,0.25)">
+        <button class="submit-btn" id="resetAllBtn" style="background:var(--expense);box-shadow:0 4px 16px rgba(255,107,107,0.25)">
+          <span class="ico ico-16">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </span>
           Reset All Data
         </button>
       </div>
@@ -1362,11 +1683,28 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 <!-- ═══ CONFIRM POPUP ═══ -->
 <div class="confirm-overlay" id="confirmOverlay">
   <div class="confirm-box">
-    <div class="confirm-ico" id="confirmIcon">⚠️</div>
+    <div class="confirm-ico-wrap danger" id="confirmIcoWrap">
+      <span class="ico ico-28" id="confirmIcoEl">
+        <!-- Default: trash icon -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+          <path d="M10 11v6"/><path d="M14 11v6"/>
+          <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+        </svg>
+      </span>
+    </div>
     <div class="confirm-title" id="confirmTitle">Are you sure?</div>
     <div class="confirm-msg" id="confirmMsg">This action cannot be undone.</div>
     <div class="confirm-acts">
-      <button class="confirm-btn cancel" id="confirmCancel">Cancel</button>
+      <button class="confirm-btn cancel" id="confirmCancel">
+        <span class="ico ico-14">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </span>
+        Cancel
+      </button>
       <button class="confirm-btn danger" id="confirmOk">Confirm</button>
     </div>
   </div>
@@ -1376,7 +1714,16 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 <div class="receipt-overlay" id="receiptOverlay">
   <div class="receipt-box" id="receiptBox">
     <div class="receipt-hd">
-      <div class="receipt-brand">Pocket<span>Flow</span> Pro</div>
+      <div class="receipt-brand">
+        <!-- Wallet icon in receipt -->
+        <span style="color:#00E5C3;display:flex;align-items:center;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+            <path d="M21 12V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/>
+            <path d="M16 12h5v4h-5a2 2 0 0 1 0-4z"/>
+          </svg>
+        </span>
+        Pocket<span>Flow</span> Pro
+      </div>
       <div class="receipt-brand-sub">Transaction Receipt</div>
     </div>
     <div class="receipt-body">
@@ -1389,9 +1736,27 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
     <hr class="receipt-divider">
     <div class="receipt-wm">POCKETFLOW PRO • VERIFIED RECORD</div>
     <div class="receipt-foot">
-      <button class="receipt-btn share" id="receiptShareBtn">WhatsApp</button>
-      <button class="receipt-btn pdf" id="receiptPdfBtn">PDF</button>
-      <button class="receipt-btn close" id="receiptCloseBtn">Close</button>
+      <button class="receipt-btn share" id="receiptShareBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.44 2 2 0 0 1 3.6 1.25h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.67a16 16 0 0 0 6 6l.42-.42a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21 16.92z"/>
+        </svg>
+        WhatsApp
+      </button>
+      <button class="receipt-btn pdf" id="receiptPdfBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="12" y1="18" x2="12" y2="12"/>
+          <line x1="9" y1="15" x2="15" y2="15"/>
+        </svg>
+        PDF
+      </button>
+      <button class="receipt-btn close" id="receiptCloseBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+        Close
+      </button>
     </div>
   </div>
 </div>
@@ -1462,12 +1827,10 @@ setTimeout(()=>{
 // ── THEME ──
 function applyTheme(){
   document.documentElement.setAttribute('data-theme',S.theme);
-  const ic=document.getElementById('themeIcon');
-  if(ic){
-    ic.setAttribute('src',S.theme==='dark'
-      ?'https://cdn.lordicon.com/wtczpqnm.json'
-      :'https://cdn.lordicon.com/abfverha.json');
-  }
+  // Toggle Moon/Sun icons
+  const isDark = S.theme === 'dark';
+  document.getElementById('iconMoon').style.display = isDark ? 'inline-flex' : 'none';
+  document.getElementById('iconSun').style.display  = isDark ? 'none' : 'inline-flex';
 }
 document.getElementById('themeBtn').addEventListener('click',()=>{
   S.theme=S.theme==='dark'?'light':'dark';
@@ -1486,12 +1849,14 @@ function refreshInstallUI(){
   const isStandalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;
   if(appInstalled||isStandalone){
     iconBtn.classList.remove('visible');banner.classList.remove('visible');
-    sb.textContent='✓ Installed';sb.disabled=true;
+    sb.innerHTML='<span class="ico ico-12"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span> Installed';
+    sb.disabled=true;
     st.textContent='PocketFlow Pro Installed';ss.textContent='Running as an installed app.';
   } else if(deferredPrompt){
     iconBtn.classList.add('visible');
     if(!sessionStorage.getItem('pf_bnd'))banner.classList.add('visible');
-    sb.textContent='Install';sb.disabled=false;
+    sb.innerHTML='<span class="ico ico-12"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span> Install';
+    sb.disabled=false;
   } else {
     iconBtn.classList.remove('visible');banner.classList.remove('visible');
     const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
@@ -1528,19 +1893,34 @@ function switchTab(tab){
 document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>switchTab(t.dataset.tab)));
 
 // ── TOAST ──
+const TOAST_ICONS = {
+  success: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>`,
+  error:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`,
+  info:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+  warning: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`
+};
 function showToast(msg,type='info',dur=2800){
-  const icons={success:'✅',error:'❌',info:'ℹ️',warning:'⚠️'};
   const c=document.getElementById('toastContainer');
   const el=document.createElement('div');
   el.className=`toast ${type}`;
-  el.innerHTML=`<span class="toast-ico">${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
+  el.innerHTML=`<span class="toast-ico">${TOAST_ICONS[type]||TOAST_ICONS.info}</span><span>${msg}</span>`;
   c.appendChild(el);
   setTimeout(()=>{el.classList.add('removing');setTimeout(()=>el.remove(),250);},dur);
 }
 
 // ── CONFIRM ──
-function showConfirm(ico,title,msg,okLabel,cb){
-  document.getElementById('confirmIcon').textContent=ico;
+const CONFIRM_ICONS = {
+  delete:  { svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`, cls: 'danger' },
+  warning: { svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`, cls: 'warning' },
+  reset:   { svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`, cls: 'danger' },
+  import:  { svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>`, cls: 'info' }
+};
+
+function showConfirm(type,title,msg,okLabel,cb){
+  const cfg = CONFIRM_ICONS[type] || CONFIRM_ICONS.delete;
+  const wrap = document.getElementById('confirmIcoWrap');
+  wrap.className = 'confirm-ico-wrap ' + cfg.cls;
+  document.getElementById('confirmIcoEl').innerHTML = cfg.svg;
   document.getElementById('confirmTitle').textContent=title;
   document.getElementById('confirmMsg').textContent=msg;
   document.getElementById('confirmOk').textContent=okLabel;
@@ -1608,7 +1988,6 @@ function drawGraph(){
   const isDark=S.theme==='dark';
   const tc=isDark?'rgba(0,229,195,':'rgba(0,184,158,';
 
-  // Fill
   const fillGrad=ctx.createLinearGradient(0,0,0,H);
   fillGrad.addColorStop(0,tc+'0.18)');
   fillGrad.addColorStop(1,tc+'0.01)');
@@ -1621,7 +2000,6 @@ function drawGraph(){
   ctx.lineTo(toX(data.length-1),H);ctx.lineTo(toX(0),H);ctx.closePath();
   ctx.fillStyle=fillGrad;ctx.fill();
 
-  // Line
   const lineGrad=ctx.createLinearGradient(0,0,W,0);
   lineGrad.addColorStop(0,tc+'0.55)');
   lineGrad.addColorStop(1,tc+'1)');
@@ -1633,12 +2011,10 @@ function drawGraph(){
   }
   ctx.strokeStyle=lineGrad;ctx.lineWidth=1.5;ctx.lineJoin='round';ctx.stroke();
 
-  // End dot
   const lx=toX(data.length-1),ly=toY(data[data.length-1]);
   ctx.beginPath();ctx.arc(lx,ly,3.5,0,Math.PI*2);ctx.fillStyle=isDark?'#00E5C3':'#00B89E';ctx.fill();
   ctx.beginPath();ctx.arc(lx,ly,7,0,Math.PI*2);ctx.fillStyle=tc+'0.18)';ctx.fill();
 
-  // Labels
   if(S.transactions.length){
     const first=new Date([...S.transactions].sort((a,b)=>new Date(a.datetime)-new Date(b.datetime))[0].datetime);
     document.getElementById('graphLabelLeft').textContent=first.toLocaleDateString('en-IN',{day:'numeric',month:'short'});
@@ -1661,6 +2037,18 @@ function calcDailyAvg(){
   const days=new Set(spent.map(t=>t.datetime.split('T')[0]));
   return sumByStatus('spent')/days.size;
 }
+
+// ── SVG ICON HELPERS for JS-rendered content ──
+const TX_ICONS = {
+  received: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="7" x2="17" y2="17"/><polyline points="17 7 17 17 7 17"/></svg>`,
+  spent:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 7 17 17 17"/></svg>`,
+  pending:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`
+};
+const EDIT_ICON   = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+const CYCLE_ICON  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>`;
+const DEL_ICON    = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`;
+const NOTE_EDIT   = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+const NOTE_DEL    = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`;
 
 // ── RENDER BUDGET ──
 function renderBudget(){
@@ -1727,19 +2115,13 @@ function renderTx(){
   empty.style.display='none';
   const signMap={received:'+',spent:'−',pending:'~'};
   const labelMap={received:'Received',spent:'Spent',pending:'Pending'};
-  const iconSrc={
-    received:'https://cdn.lordicon.com/qhviklyi.json',
-    spent:'https://cdn.lordicon.com/jgnvfzqg.json',
-    pending:'https://cdn.lordicon.com/abfverha.json'
-  };
-  const iconColor={received:'#34D399',spent:'#FF6B6B',pending:'#FBBF24'};
   list.innerHTML=items.map(t=>{
     const st=t.status||t.type;
     const dt=new Date(t.datetime);
     const ds=dt.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})+' · '+dt.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
     return `<div class="tx-item ${st}" data-id="${t.id}">
       <div class="tx-icon ${st}">
-        <lord-icon src="${iconSrc[st]}" trigger="hover" colors="primary:${iconColor[st]}" style="width:20px;height:20px"></lord-icon>
+        <span class="ico ico-20">${TX_ICONS[st]||TX_ICONS.spent}</span>
       </div>
       <div class="tx-info">
         <div class="tx-name">${escH(t.reason)}</div>
@@ -1751,15 +2133,9 @@ function renderTx(){
       <div class="tx-right">
         <div class="tx-amount ${st}">${signMap[st]||''}${fmt(t.amount)}</div>
         <div class="tx-btns">
-          <button class="tx-btn edit" onclick="editTx('${t.id}')" title="Edit">
-            <lord-icon src="https://cdn.lordicon.com/pflnmvrq.json" trigger="hover" colors="primary:#60A5FA" style="width:13px;height:13px"></lord-icon>
-          </button>
-          <button class="tx-btn cycle" onclick="cycleTxStatus('${t.id}')" title="Change status">
-            <lord-icon src="https://cdn.lordicon.com/abfverha.json" trigger="hover" colors="primary:#FBBF24" style="width:13px;height:13px"></lord-icon>
-          </button>
-          <button class="tx-btn del" onclick="deleteTx('${t.id}')" title="Delete">
-            <lord-icon src="https://cdn.lordicon.com/jgnvfzqg.json" trigger="hover" colors="primary:#FF6B6B" style="width:13px;height:13px"></lord-icon>
-          </button>
+          <button class="tx-btn edit" onclick="editTx('${t.id}')" title="Edit transaction">${EDIT_ICON}</button>
+          <button class="tx-btn cycle" onclick="cycleTxStatus('${t.id}')" title="Change status">${CYCLE_ICON}</button>
+          <button class="tx-btn del" onclick="deleteTx('${t.id}')" title="Delete transaction">${DEL_ICON}</button>
         </div>
       </div>
     </div>`;
@@ -1846,7 +2222,7 @@ document.getElementById('transSave').addEventListener('click',()=>{
 function editTx(id){const t=S.transactions.find(x=>x.id===id);if(t)openTxSheet(t.status||t.type,t);}
 function deleteTx(id){
   const t=S.transactions.find(x=>x.id===id);
-  showConfirm('🗑️','Delete Transaction',`Delete "${escH(t?.reason||'this transaction')}"?`,'Delete',()=>{
+  showConfirm('delete','Delete Transaction',`Delete "${escH(t?.reason||'this transaction')}"?`,'Delete',()=>{
     S.transactions=S.transactions.filter(x=>x.id!==id);
     saveState();renderBudget();showToast('Transaction deleted','warning');
   });
@@ -1899,7 +2275,7 @@ document.getElementById('receiptPdfBtn').addEventListener('click',()=>{
   <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;background:#f8fafc;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
   .r{max-width:340px;width:100%;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.12);background:white}
   .rh{background:linear-gradient(135deg,#060D1E,#0D1F3C);padding:22px;text-align:center}
-  .rb{color:#0b0b0b;font-size:18px;font-weight:800;letter-spacing:-0.3px}.rbs{color:#00E5C3}
+  .rb{color:white;font-size:18px;font-weight:800;letter-spacing:-0.3px}.rbs{color:#00E5C3}
   .rs{color:rgba(240,244,255,0.4);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin-top:3px}
   .rb2{padding:18px}.ra{text-align:center;padding:16px 0;border-bottom:1px dashed #e2e8f0;margin-bottom:14px}
   .ral{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#94a3b8;margin-bottom:4px}
@@ -1975,21 +2351,28 @@ document.getElementById('calcGrid').addEventListener('click',e=>{
   else if(a==='equal')cEqual();
 });
 
+const HIST_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/></svg>`;
+const HIDE_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="18 15 12 9 6 15"/></svg>`;
+
 document.getElementById('historyToggle').addEventListener('click',()=>{
   const p=document.getElementById('calcHistoryPanel');
   p.classList.toggle('open');
-  document.getElementById('historyToggle').innerHTML=p.classList.contains('open')
-    ?`<lord-icon src="https://cdn.lordicon.com/abfverha.json" trigger="hover" colors="primary:var(--text2)" style="width:12px;height:12px"></lord-icon> Hide`
-    :`<lord-icon src="https://cdn.lordicon.com/abfverha.json" trigger="hover" colors="primary:var(--text2)" style="width:12px;height:12px"></lord-icon> History`;
+  const isOpen = p.classList.contains('open');
+  document.getElementById('historyToggle').innerHTML = isOpen
+    ? `${HIDE_ICON} Hide`
+    : `${HIST_ICON} History`;
 });
 document.getElementById('clearHistory').addEventListener('click',()=>{
-  showConfirm('🗑️','Clear History','Delete all calculation history?','Clear',()=>{
+  showConfirm('delete','Clear History','Delete all calculation history?','Clear',()=>{
     S.calcHistory=[];saveState();renderCalcHistory();showToast('History cleared','info');
   });
 });
 function renderCalcHistory(){
   const list=document.getElementById('calcHistoryList');
-  if(!S.calcHistory.length){list.innerHTML='<div class="empty-state" style="padding:14px"><div class="empty-sub">No calculations yet</div></div>';return;}
+  if(!S.calcHistory.length){
+    list.innerHTML='<div class="empty-state" style="padding:14px"><div class="empty-sub">No calculations yet</div></div>';
+    return;
+  }
   list.innerHTML=S.calcHistory.slice(0,15).map(h=>`
     <div class="hist-item" onclick="loadHist('${escA(h.result)}')">
       <span class="hist-expr">${escH(h.expr)}</span>
@@ -2031,12 +2414,8 @@ function renderNotes(){
       <div class="note-head">
         <div class="note-title">${escH(n.title||'Untitled')}</div>
         <div class="note-acts">
-          <button class="note-act edit" onclick="event.stopPropagation();openNoteEd('${n.id}')" title="Edit">
-            <lord-icon src="https://cdn.lordicon.com/pflnmvrq.json" trigger="hover" colors="primary:#60A5FA" style="width:13px;height:13px"></lord-icon>
-          </button>
-          <button class="note-act del" onclick="event.stopPropagation();deleteNote('${n.id}')" title="Delete">
-            <lord-icon src="https://cdn.lordicon.com/jgnvfzqg.json" trigger="hover" colors="primary:#FF6B6B" style="width:13px;height:13px"></lord-icon>
-          </button>
+          <button class="note-act edit" onclick="event.stopPropagation();openNoteEd('${n.id}')" title="Edit note">${NOTE_EDIT}</button>
+          <button class="note-act del" onclick="event.stopPropagation();deleteNote('${n.id}')" title="Delete note">${NOTE_DEL}</button>
         </div>
       </div>
       <div class="note-body">${escH(n.content.replace(/\n/g,' '))||'<em style="opacity:0.4">Empty note</em>'}</div>
@@ -2078,7 +2457,7 @@ document.getElementById('noteSave').addEventListener('click',()=>{
 });
 function deleteNote(id){
   const n=S.notes.find(x=>x.id===id);
-  showConfirm('🗑️','Delete Note',`Delete "${escH(n?.title||'this note')}"?`,'Delete',()=>{
+  showConfirm('delete','Delete Note',`Delete "${escH(n?.title||'this note')}"?`,'Delete',()=>{
     S.notes=S.notes.filter(x=>x.id!==id);saveState();renderNotes();showToast('Note deleted','warning');
   });
 }
@@ -2101,7 +2480,7 @@ document.getElementById('currencySelect').addEventListener('change',e=>{S.curren
 
 // ── RESET ──
 document.getElementById('resetAllBtn').addEventListener('click',()=>{
-  showConfirm('⚠️','Reset All Data','This permanently deletes all transactions, notes, and settings.','Reset Everything',()=>{
+  showConfirm('reset','Reset All Data','This permanently deletes all transactions, notes, and settings.','Reset Everything',()=>{
     const theme=S.theme;
     S=Object.assign({},DEFAULT,{theme});
     saveState();renderBudget();renderNotes();
@@ -2128,7 +2507,7 @@ document.getElementById('importFile').addEventListener('change',e=>{
     try{
       const imp=JSON.parse(ev.target.result);
       if(!Array.isArray(imp.transactions)&&!Array.isArray(imp.notes))throw new Error('Invalid file');
-      showConfirm('📥','Import Backup','Replace all current data with the backup?','Import',()=>{
+      showConfirm('import','Import Backup','Replace all current data with the backup?','Import',()=>{
         if(imp.transactions){
           imp.transactions=imp.transactions.map(t=>{
             if(t.type==='added')t.type='received';
