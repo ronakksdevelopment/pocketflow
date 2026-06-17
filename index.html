@@ -1138,17 +1138,6 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); padding: 14px; }
 .no-scroll { overflow: hidden; }
 
-/* ── EXPORT BUTTON ── */
-.export-btn {
-  padding: 9px 13px; border-radius: var(--r-sm);
-  background: var(--card); border: 1px solid var(--border2);
-  color: var(--text2); font-size: 11.5px; font-weight: 700;
-  display: flex; align-items: center; gap: 6px; white-space: nowrap;
-  transition: all var(--fast) var(--ease); flex-shrink: 0;
-}
-.export-btn:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-mid); transform: translateY(-1px); }
-.export-btn:active { transform: scale(0.95); }
-
 /* ── EXPORT MODAL ── */
 .export-overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.65);
@@ -1568,14 +1557,8 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
       <button class="chip" data-filter="received"><span class="chip-dot"></span> Received</button>
       <button class="chip" data-filter="spent"><span class="chip-dot"></span> Spent</button>
       <button class="chip" data-filter="pending"><span class="chip-dot"></span> Pending</button>
-      <button class="export-btn" id="exportTransBtn" title="Export Transactions">
-        <span class="ico ico-14">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="7 10 12 15 17 10"/>
-            <line x1="12" y1="15" x2="12" y2="3"/>
-          </svg>
-        </span>
+      <button class="chip" id="exportTransBtn" title="Export Transactions">
+        <span class="chip-dot" style="background:var(--text3)"></span>
         Export
       </button>
     </div>
@@ -2125,14 +2108,10 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
         <div class="export-action-row">
           <button class="export-action-btn pdf" id="exportPdfBtn">
             <span class="ico ico-15">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                <polyline points="14 2 14 8 20 8"/>
-                <line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/>
-              </svg>
-            </span>
-            Export PDF
-          </button>
+              <button class="chip" id="exportTransBtn" title="Export Transactions">
+        <span class="chip-dot" style="background:var(--text3)"></span>
+        Export
+      </button>
           <button class="export-action-btn whatsapp" id="exportWaBtn">
             <span class="ico ico-15">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
