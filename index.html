@@ -458,18 +458,70 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 .sum-card {
   border-radius: var(--r); background: var(--card); border: 1px solid var(--border);
   padding: 13px 10px 11px; text-align: center;
-  transition: transform var(--fast) var(--ease), box-shadow var(--fast);
+  transition: transform var(--fast) var(--ease), box-shadow var(--fast), border-color var(--fast);
+  cursor: pointer;
 }
+.sum-card:hover { border-color: var(--border2); transform: translateY(-1px); }
 .sum-card:active { transform: scale(0.97); }
 .sum-icon { width: 30px; height: 30px; margin: 0 auto 7px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
 .sum-card.inc .sum-icon { background: var(--income-bg); color: var(--income); }
 .sum-card.exp .sum-icon { background: var(--expense-bg); color: var(--expense); }
 .sum-card.pnd .sum-icon { background: var(--pending-bg); color: var(--pending); }
+.sum-card.bank .sum-icon { background: var(--blue-bg); color: var(--blue); }
+.sum-card.cash-c .sum-icon { background: var(--teal-dim); color: var(--teal); }
 .sum-val { font-size: 14px; font-weight: 800; letter-spacing: -0.3px; font-variant-numeric: tabular-nums; }
 .sum-card.inc .sum-val { color: var(--income); }
 .sum-card.exp .sum-val { color: var(--expense); }
 .sum-card.pnd .sum-val { color: var(--pending); }
+.sum-card.bank .sum-val { color: var(--blue); }
+.sum-card.cash-c .sum-val { color: var(--teal); }
 .sum-lbl { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text3); margin-top: 2px; }
+
+/* ── BANK / CASH BALANCE ROW ── */
+.balance-split-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.bsplit-card {
+  border-radius: var(--r); background: var(--card); border: 1px solid var(--border);
+  padding: 14px 13px; position: relative; overflow: hidden;
+  transition: transform var(--fast), border-color var(--fast), box-shadow var(--fast);
+  cursor: pointer;
+}
+.bsplit-card:hover { border-color: var(--border2); transform: translateY(-1px); }
+.bsplit-card:active { transform: scale(0.97); }
+.bsplit-card.bank-card { border-left: 3px solid var(--blue); }
+.bsplit-card.cash-card { border-left: 3px solid var(--teal); }
+.bsplit-eyebrow {
+  font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+  display: flex; align-items: center; gap: 5px; margin-bottom: 7px;
+}
+.bsplit-card.bank-card .bsplit-eyebrow { color: var(--blue); }
+.bsplit-card.cash-card .bsplit-eyebrow { color: var(--teal); }
+.bsplit-val {
+  font-size: 20px; font-weight: 800; letter-spacing: -0.5px;
+  font-variant-numeric: tabular-nums; color: var(--text); margin-bottom: 4px;
+}
+.bsplit-sub { font-size: 10px; color: var(--text3); }
+.bsplit-badge {
+  position: absolute; top: 10px; right: 10px;
+  font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 10px;
+}
+.bank-card .bsplit-badge { background: var(--blue-bg); color: var(--blue); }
+.cash-card .bsplit-badge { background: var(--teal-dim); color: var(--teal); }
+
+/* ── PENDING PREDICTION ── */
+.pending-pred-card {
+  border-radius: var(--r); background: var(--pending-bg);
+  border: 1px solid var(--pending-bd);
+  padding: 13px 14px; margin-bottom: 12px;
+  display: none;
+}
+.pending-pred-card.visible { display: block; }
+.pred-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.pred-title { font-size: 12px; font-weight: 700; color: var(--pending); display: flex; align-items: center; gap: 6px; }
+.pred-count { font-size: 10px; background: var(--pending-bg); border: 1px solid var(--pending-bd); color: var(--pending); padding: 2px 8px; border-radius: 10px; font-weight: 700; }
+.pred-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.pred-item { text-align: center; }
+.pred-val { font-size: 13px; font-weight: 800; color: var(--pending); font-variant-numeric: tabular-nums; }
+.pred-lbl { font-size: 9px; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; margin-top: 1px; }
 
 /* ── STAT GRID ── */
 .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
@@ -591,6 +643,34 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 .tx-btn:hover  { transform: translateY(-1px); }
 .tx-btn:active { transform: scale(0.86); opacity: 0.8; }
 
+/* ── TRANSACTION ICON ANIMATIONS ── */
+@keyframes status-flip {
+  0%   { transform: scale(1) rotate(0deg); }
+  40%  { transform: scale(0.7) rotate(180deg); }
+  100% { transform: scale(1) rotate(360deg); }
+}
+@keyframes icon-pop {
+  0%   { transform: scale(0.6); opacity: 0; }
+  70%  { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.tx-icon { transition: background var(--mid) var(--ease), box-shadow var(--fast); }
+.tx-icon svg { transition: transform var(--mid) var(--spring); }
+.tx-icon.animating svg { animation: status-flip 0.4s var(--spring) forwards; }
+.tx-icon-new { animation: icon-pop 0.35s var(--spring) both; }
+
+/* tx-item transition for live updates */
+.tx-item { transition: background var(--fast), border-color var(--fast), transform var(--fast), box-shadow var(--fast), opacity var(--mid); }
+.tx-item.updating { opacity: 0.5; transform: scale(0.985); }
+
+/* source badge on transaction */
+.tx-source-badge {
+  font-size: 8.5px; font-weight: 700; padding: 1px 5px; border-radius: 8px;
+  text-transform: uppercase; letter-spacing: 0.3px; flex-shrink: 0;
+}
+.tx-source-badge.bank { background: var(--blue-bg); color: var(--blue); }
+.tx-source-badge.cash { background: var(--teal-dim); color: var(--teal); }
+
 /* ── EMPTY STATE ── */
 .empty-state {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -603,78 +683,157 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 /* ── CALCULATOR PAGE ── */
 .calc-screen {
   border-radius: var(--r-lg); background: var(--card); border: 1px solid var(--border);
-  padding: 20px 18px 16px; margin-bottom: 12px;
-  min-height: 116px; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end;
+  padding: 14px 18px 16px; margin-bottom: 10px;
+  min-height: 130px; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end;
   position: relative; overflow: hidden; box-shadow: var(--shadow);
 }
 [data-theme="dark"] .calc-screen { background: linear-gradient(145deg, #0D1832, #111F38); }
 .calc-screen-orb {
   position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 10% 100%, rgba(0,229,195,0.06) 0%, transparent 60%);
+  background: radial-gradient(ellipse at 10% 100%, rgba(0,229,195,0.07) 0%, transparent 60%);
   pointer-events: none;
 }
+/* Top-left memory/history row */
+.calc-top-row {
+  position: absolute; top: 10px; left: 10px; right: 10px;
+  display: flex; align-items: center; gap: 6px; z-index: 2;
+}
+.calc-mem-btns { display: flex; gap: 4px; flex: 1; }
+.calc-mem-btn {
+  font-size: 10px; font-weight: 700; color: var(--text3);
+  background: var(--input-bg); border: 1px solid var(--border);
+  border-radius: 6px; padding: 4px 8px;
+  transition: background var(--fast), color var(--fast), border-color var(--fast), transform var(--fast);
+  white-space: nowrap;
+}
+.calc-mem-btn:hover { background: var(--hover); color: var(--text2); border-color: var(--border2); }
+.calc-mem-btn:active { transform: scale(0.92); }
+.calc-mem-btn.mem-active { color: var(--teal); border-color: rgba(0,229,195,0.3); background: var(--teal-dim); }
 .calc-hist-btn {
-  position: absolute; top: 12px; left: 12px;
-  font-size: 11px; color: var(--text2);
+  font-size: 10px; color: var(--text2);
   background: var(--input-bg); border: 1px solid var(--border2);
-  border-radius: 8px; padding: 5px 10px;
-  display: flex; align-items: center; gap: 5px; font-weight: 600;
+  border-radius: 7px; padding: 5px 9px;
+  display: flex; align-items: center; gap: 4px; font-weight: 600;
   transition: background var(--fast), border-color var(--fast), transform var(--fast);
-  z-index: 2;
+  flex-shrink: 0;
 }
 .calc-hist-btn:hover { background: var(--hover); border-color: var(--border3); }
-.calc-hist-btn:active { transform: scale(0.94); }
-.calc-expr { font-size: 13px; color: var(--text3); min-height: 18px; text-align: right; word-break: break-all; position: relative; z-index: 1; }
+.calc-hist-btn:active { transform: scale(0.93); }
+
+/* Memory indicator dot */
+.calc-mem-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--teal);
+  display: none; flex-shrink: 0; margin-left: 2px;
+  animation: icon-pulse 2s ease-in-out infinite;
+}
+.calc-mem-dot.visible { display: inline-block; }
+
+.calc-expr {
+  font-size: 12.5px; color: var(--text3); min-height: 18px; text-align: right;
+  word-break: break-all; position: relative; z-index: 1;
+  transition: opacity var(--fast);
+}
 .calc-result {
-  font-size: 44px; font-weight: 700; letter-spacing: -1.5px;
+  font-size: 46px; font-weight: 700; letter-spacing: -1.5px;
   text-align: right; word-break: break-all;
-  line-height: 1.1; margin-top: 4px; color: var(--text);
-  transition: font-size var(--fast); position: relative; z-index: 1;
+  line-height: 1.05; margin-top: 3px; color: var(--text);
+  transition: font-size var(--mid) var(--ease), color var(--mid); position: relative; z-index: 1;
   font-variant-numeric: tabular-nums;
 }
-.calc-result.error { color: var(--expense); font-size: 26px; }
+.calc-result.error { color: var(--expense); font-size: 24px; }
+.calc-result.result-positive { color: var(--income); }
+.calc-result.result-negative { color: var(--expense); }
+.calc-result.result-anim { animation: icon-bounce-in 0.25s var(--spring); }
+
+/* Finance quick row */
+.calc-finance-row {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 8px;
+}
+.calc-fn-btn {
+  padding: 8px 4px; border-radius: var(--r-sm); font-size: 10px; font-weight: 700;
+  background: var(--card); border: 1px solid var(--border); color: var(--text2);
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  transition: all var(--fast) var(--ease);
+  text-transform: uppercase; letter-spacing: 0.4px;
+}
+.calc-fn-btn:hover { border-color: var(--border2); color: var(--text); transform: translateY(-1px); }
+.calc-fn-btn:active { transform: scale(0.94); background: var(--active); }
+.calc-fn-btn .fn-ico { font-size: 13px; line-height: 1; }
+.calc-fn-btn.fn-gst { color: var(--income); border-color: var(--income-bd); background: var(--income-bg); }
+.calc-fn-btn.fn-disc { color: var(--expense); border-color: var(--expense-bd); background: var(--expense-bg); }
+.calc-fn-btn.fn-tip  { color: var(--pending); border-color: var(--pending-bd); background: var(--pending-bg); }
+.calc-fn-btn.fn-split{ color: var(--blue); border-color: var(--blue-bg); background: var(--blue-bg); }
+
+/* Finance result panel */
+.calc-fn-result {
+  background: var(--teal-dim); border: 1px solid rgba(0,229,195,0.25);
+  border-radius: var(--r-sm); padding: 10px 13px; margin-bottom: 8px;
+  display: none; animation: fade-up 0.2s var(--ease);
+}
+.calc-fn-result.visible { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.calc-fn-result-label { font-size: 11px; color: var(--teal); font-weight: 700; }
+.calc-fn-result-val { font-size: 15px; font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; }
 
 .calc-hist-panel { max-height: 0; overflow: hidden; transition: max-height var(--slow) var(--ease); }
-.calc-hist-panel.open { max-height: 260px; }
+.calc-hist-panel.open { max-height: 280px; overflow-y: auto; }
 .calc-hist-inner { padding: 4px 0 10px; display: flex; flex-direction: column; gap: 5px; }
 .hist-item {
   display: flex; justify-content: space-between; align-items: center;
   background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--r-sm); padding: 10px 13px; cursor: pointer;
-  transition: background var(--fast), border-color var(--fast);
+  border-radius: var(--r-sm); padding: 9px 13px; cursor: pointer;
+  transition: background var(--fast), border-color var(--fast), transform var(--fast);
 }
-.hist-item:active { background: var(--active); }
-.hist-expr { font-size: 12px; color: var(--text2); }
-.hist-res { font-size: 13.5px; font-weight: 800; color: var(--teal); font-variant-numeric: tabular-nums; }
+.hist-item:hover { border-color: var(--border2); }
+.hist-item:active { background: var(--active); transform: scale(0.99); }
+.hist-expr { font-size: 11.5px; color: var(--text2); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hist-res { font-size: 13px; font-weight: 800; color: var(--teal); font-variant-numeric: tabular-nums; flex-shrink: 0; margin-left: 8px; }
 .hist-clear { text-align: center; font-size: 12px; color: var(--expense); font-weight: 700; padding: 7px; transition: opacity var(--fast); display: flex; align-items: center; justify-content: center; gap: 5px; }
 .hist-clear:active { opacity: 0.65; }
 
-.calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; }
+.calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .calc-btn {
   aspect-ratio: 1; border-radius: var(--r);
-  font-size: 20px; font-weight: 700;
+  font-size: 19px; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
   background: var(--card); border: 1px solid var(--border);
-  transition: background var(--fast), border-color var(--fast), transform var(--fast), box-shadow var(--fast);
+  transition: background var(--fast), border-color var(--fast), transform var(--fast), box-shadow var(--fast), color var(--fast);
   user-select: none; box-shadow: var(--shadow-sm);
   position: relative; overflow: hidden;
 }
-.calc-btn::after { content: ''; position: absolute; inset: 0; background: white; opacity: 0; border-radius: inherit; transition: opacity 0.1s; }
-.calc-btn:active::after { opacity: 0.04; }
-.calc-btn:active { transform: scale(0.90); }
+.calc-btn::after { content: ''; position: absolute; inset: 0; background: currentColor; opacity: 0; border-radius: inherit; transition: opacity 0.08s; }
+.calc-btn:active::after { opacity: 0.06; }
+.calc-btn:active { transform: scale(0.88); box-shadow: none; }
 .calc-btn.num { color: var(--text); }
-.calc-btn.op { background: var(--teal-dim); color: var(--teal); border-color: rgba(0,229,195,0.22); }
+.calc-btn.num:hover { background: var(--hover); border-color: var(--border2); }
+.calc-btn.op { background: var(--teal-dim); color: var(--teal); border-color: rgba(0,229,195,0.22); font-size: 22px; }
+.calc-btn.op:hover { background: var(--teal-glow); border-color: rgba(0,229,195,0.4); }
 .calc-btn.op:active { background: var(--teal-glow); }
-.calc-btn.action { background: var(--input-bg); color: var(--text2); }
+.calc-btn.action { background: var(--input-bg); color: var(--text2); font-size: 15px; }
+.calc-btn.action:hover { background: var(--hover); color: var(--text); }
 .calc-btn.equal {
   background: var(--teal); color: #080C18;
-  border-color: transparent; box-shadow: var(--shadow-teal); font-size: 22px;
+  border-color: transparent; box-shadow: var(--shadow-teal); font-size: 24px;
+  font-weight: 800;
 }
-.calc-btn.equal:active { box-shadow: 0 2px 8px rgba(0,229,195,0.15); }
-.calc-btn.wide { grid-column: span 2; aspect-ratio: unset; padding: 0 18px; height: 58px; }
+.calc-btn.equal:hover { box-shadow: 0 6px 24px rgba(0,229,195,0.35); transform: translateY(-1px); }
+.calc-btn.equal:active { box-shadow: 0 2px 8px rgba(0,229,195,0.15); transform: scale(0.91); }
+.calc-btn.wide { grid-column: span 2; aspect-ratio: unset; padding: 0 18px; height: 56px; }
 .calc-btn.del-btn { background: var(--expense-bg); color: var(--expense); border-color: var(--expense-bd); }
+.calc-btn.del-btn:hover { background: rgba(255,107,107,0.18); }
 .calc-btn.pct-btn { background: var(--pending-bg); color: var(--pending); border-color: var(--pending-bd); }
+.calc-btn.pct-btn:hover { background: rgba(251,191,36,0.18); }
 
+/* Pressed ripple */
+@keyframes calc-ripple {
+  from { transform: scale(0); opacity: 0.3; }
+  to   { transform: scale(2.5); opacity: 0; }
+}
+.calc-btn .ripple {
+  position: absolute; width: 40px; height: 40px; border-radius: 50%;
+  background: currentColor; margin-top: -20px; margin-left: -20px;
+  animation: calc-ripple 0.4s ease-out forwards; pointer-events: none;
+}
+   
 /* ── NOTES PAGE ── */
 .notes-new-btn {
   width: 100%; padding: 13px; border-radius: var(--r);
@@ -1113,6 +1272,16 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
           </div>
           <div class="hero-balance" id="heroBalance">₹0.00</div>
           <div class="hero-sub" id="heroSub">Tap ⚙ to set your cash &amp; budget</div>
+      <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;">
+        <span style="font-size:10px;color:var(--blue);font-weight:700;background:var(--blue-bg);padding:2px 8px;border-radius:8px;display:flex;align-items:center;gap:4px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          <span id="heroBankBal">Bank ₹0</span>
+        </span>
+        <span style="font-size:10px;color:var(--teal);font-weight:700;background:var(--teal-dim);padding:2px 8px;border-radius:8px;display:flex;align-items:center;gap:4px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+          <span id="heroCashBal">Cash ₹0</span>
+        </span>
+      </div>
         </div>
         <div class="hero-delta" id="heroBadge">—</div>
       </div>
@@ -1157,8 +1326,7 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
         <div class="sum-icon">
           <span class="ico ico-16">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
-              <polyline points="17 6 23 6 23 12"/>
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
             </svg>
           </span>
         </div>
@@ -1169,8 +1337,7 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
         <div class="sum-icon">
           <span class="ico ico-16">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/>
-              <polyline points="17 18 23 18 23 12"/>
+              <path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
             </svg>
           </span>
         </div>
@@ -1181,12 +1348,60 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
         <div class="sum-icon">
           <span class="ico ico-16">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
             </svg>
           </span>
         </div>
         <div class="sum-val" id="totalPending">₹0</div>
         <div class="sum-lbl">Pending</div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <!-- Bank / Cash Split -->
+    <div class="balance-split-row">
+      <div class="bsplit-card bank-card" id="bankCard">
+        <div class="bsplit-eyebrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          Bank Balance
+        </div>
+        <div class="bsplit-val" id="bankBalVal">₹0.00</div>
+        <div class="bsplit-sub" id="bankBalSub">0 transactions</div>
+        <span class="bsplit-badge" id="bankBadge">NET</span>
+      </div>
+      <div class="bsplit-card cash-card" id="cashCard">
+        <div class="bsplit-eyebrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+          Cash Balance
+        </div>
+        <div class="bsplit-val" id="cashBalVal">₹0.00</div>
+        <div class="bsplit-sub" id="cashBalSub">0 transactions</div>
+        <span class="bsplit-badge" id="cashBadge">NET</span>
+      </div>
+    </div>
+
+    <!-- Pending Prediction -->
+    <div class="pending-pred-card" id="pendingPredCard">
+      <div class="pred-head">
+        <div class="pred-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Pending Prediction
+        </div>
+        <span class="pred-count" id="predCount">0 pending</span>
+      </div>
+      <div class="pred-grid">
+        <div class="pred-item">
+          <div class="pred-val" id="predIfAll">₹0</div>
+          <div class="pred-lbl">If All Clear</div>
+        </div>
+        <div class="pred-item">
+          <div class="pred-val" id="predIfReceived">₹0</div>
+          <div class="pred-lbl">All Received</div>
+        </div>
+        <div class="pred-item">
+          <div class="pred-val" id="predIfSpent">₹0</div>
+          <div class="pred-lbl">All Spent</div>
+        </div>
       </div>
     </div>
 
@@ -1285,16 +1500,45 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   <div id="pageCalc" class="page">
     <div class="calc-screen">
       <div class="calc-screen-orb"></div>
-      <button class="calc-hist-btn" id="historyToggle">
-        <span class="ico ico-12 ico-text2">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/>
-          </svg>
-        </span>
-        History
-      </button>
+      <div class="calc-top-row">
+        <div class="calc-mem-btns">
+          <button class="calc-mem-btn" id="memStore" title="Memory Store">MS</button>
+          <button class="calc-mem-btn" id="memRecall" title="Memory Recall">MR</button>
+          <button class="calc-mem-btn" id="memAdd" title="Memory Add">M+</button>
+          <button class="calc-mem-btn" id="memClear" title="Memory Clear">MC</button>
+          <span class="calc-mem-dot" id="memDot"></span>
+        </div>
+        <button class="calc-hist-btn" id="historyToggle">
+          <span class="ico ico-11">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/>
+            </svg>
+          </span>
+          Hist
+        </button>
+      </div>
       <div class="calc-expr" id="calcExpr"></div>
       <div class="calc-result" id="calcResult">0</div>
+    </div>
+
+    <!-- Finance Quick Functions -->
+    <div class="calc-finance-row">
+      <button class="calc-fn-btn fn-gst" data-fn="gst">
+        <span class="fn-ico">🧾</span>GST 18%
+      </button>
+      <button class="calc-fn-btn fn-disc" data-fn="disc">
+        <span class="fn-ico">🏷️</span>Discount
+      </button>
+      <button class="calc-fn-btn fn-tip" data-fn="tip">
+        <span class="fn-ico">💡</span>Tip 10%
+      </button>
+      <button class="calc-fn-btn fn-split" data-fn="split">
+        <span class="fn-ico">👥</span>Split 2
+      </button>
+    </div>
+    <div class="calc-fn-result" id="calcFnResult">
+      <span class="calc-fn-result-label" id="calcFnLabel">Result</span>
+      <span class="calc-fn-result-val" id="calcFnVal">—</span>
     </div>
 
     <div class="calc-hist-panel" id="calcHistoryPanel">
@@ -1315,14 +1559,7 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
     <div class="calc-grid" id="calcGrid">
       <button class="calc-btn action" data-action="clear">AC</button>
       <button class="calc-btn pct-btn" data-action="pct">%</button>
-      <button class="calc-btn del-btn" data-action="del">
-        <span class="ico ico-18">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/>
-            <line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/>
-          </svg>
-        </span>
-      </button>
+      <button class="calc-btn action" data-action="sign">±</button>
       <button class="calc-btn op" data-op="÷">÷</button>
       <button class="calc-btn num" data-num="7">7</button>
       <button class="calc-btn num" data-num="8">8</button>
@@ -1336,13 +1573,20 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
       <button class="calc-btn num" data-num="2">2</button>
       <button class="calc-btn num" data-num="3">3</button>
       <button class="calc-btn op" data-op="+">+</button>
-      <button class="calc-btn action" data-action="sign">+/−</button>
+      <button class="calc-btn del-btn" data-action="del">
+        <span class="ico ico-18">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/>
+            <line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/>
+          </svg>
+        </span>
+      </button>
       <button class="calc-btn num" data-num="0">0</button>
       <button class="calc-btn num" data-num=".">.</button>
       <button class="calc-btn equal" data-action="equal">=</button>
     </div>
   </div>
-
+   
   <!-- ═══════════════ NOTES PAGE ═══════════════ -->
   <div id="pageNotes" class="page">
     <button class="notes-new-btn" id="createNoteBtn">
@@ -1484,6 +1728,19 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
           </button>
         </div>
       </div>
+     <div class="field">
+        <div class="field-lbl">Account Source</div>
+        <div class="type-row">
+          <button class="type-btn added active" id="sourceCash" style="flex:1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
+            Cash
+          </button>
+          <button class="type-btn spent" id="sourceBank" style="flex:1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+            Bank
+          </button>
+        </div>
+      </div>
       <div class="field">
         <div class="field-lbl">Description</div>
         <input type="text" class="field-input" id="transReason" placeholder="e.g. Groceries, Salary…" maxlength="80">
@@ -1570,8 +1827,13 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
       <div class="section-label" style="margin-top:0">Budget Setup</div>
       <div class="card" style="display:flex;flex-direction:column;gap:11px">
         <div class="field">
-          <div class="field-lbl">Total Cash Available</div>
-          <input type="number" class="field-input" id="settingsCash" placeholder="Enter your total cash" min="0" step="0.01">
+         <div class="field">
+          <div class="field-lbl">Cash Balance</div>
+          <input type="number" class="field-input" id="settingsCash" placeholder="Enter your cash on hand" min="0" step="0.01">
+        </div>
+        <div class="field">
+          <div class="field-lbl">Bank Balance</div>
+          <input type="number" class="field-input" id="settingsBank" placeholder="Enter your bank balance" min="0" step="0.01">
         </div>
         <div class="field">
           <div class="field-lbl">Monthly Budget Limit</div>
@@ -1780,7 +2042,12 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 })();
 
 // ── STATE ──
-const DEFAULT={totalCash:0,monthlyBudget:0,currency:'₹',transactions:[],notes:[],calcHistory:[],theme:'dark'};
+const DEFAULT={
+  totalCash:0, totalBank:0,
+  monthlyBudget:0, currency:'₹',
+  transactions:[], notes:[], calcHistory:[],
+  theme:'dark', calcMemory:0
+};
 let S=loadState();
 let currentTab='budget';
 let txFilter='all';
@@ -1807,9 +2074,12 @@ function loadState(){
         p.transactions=p.transactions.map(t=>{
           if(t.type==='added')t.type='received';
           if(!t.status)t.status=t.type;
+          if(!t.source)t.source='cash'; // migrate legacy → cash by default
           return t;
         });
       }
+      if(!p.totalBank)p.totalBank=0;
+      if(!p.calcMemory)p.calcMemory=0;
       return Object.assign({},DEFAULT,p);
     }
   }catch(e){}
@@ -2038,11 +2308,65 @@ function calcDailyAvg(){
   return sumByStatus('spent')/days.size;
 }
 
+// ── BANK / CASH CALCULATIONS ──
+function calcBankBalance(){
+  let b=S.totalBank||0;
+  S.transactions.filter(t=>t.source==='bank').forEach(t=>{
+    const st=t.status||t.type;
+    if(st==='received')b+=t.amount;
+    else if(st==='spent')b-=t.amount;
+  });
+  return b;
+}
+function calcCashBalance(){
+  let b=S.totalCash||0;
+  S.transactions.filter(t=>(t.source||'cash')==='cash').forEach(t=>{
+    const st=t.status||t.type;
+    if(st==='received')b+=t.amount;
+    else if(st==='spent')b-=t.amount;
+  });
+  return b;
+}
+function sumBySourceStatus(source,status){
+  return S.transactions
+    .filter(t=>(t.source||'cash')===source&&(t.status||t.type)===status)
+    .reduce((a,t)=>a+t.amount,0);
+}
+function calcPendingPredictions(){
+  const pending=S.transactions.filter(t=>(t.status||t.type)==='pending');
+  if(!pending.length)return null;
+  const currentBal=calcBalance();
+  const pendRec=pending.filter(t=>t._pendingDir==='received').reduce((a,t)=>a+t.amount,0);
+  const pendSp=pending.filter(t=>t._pendingDir!=='received').reduce((a,t)=>a+t.amount,0);
+  const totalAmt=pending.reduce((a,t)=>a+t.amount,0);
+  return {
+    count: pending.length,
+    ifAllReceived: currentBal + totalAmt,
+    ifAllSpent:    currentBal - totalAmt,
+    ifCleared:     currentBal  // pending marked as cleared (removed)
+  };
+}
+
 // ── SVG ICON HELPERS for JS-rendered content ──
 const TX_ICONS = {
-  received: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="7" x2="17" y2="17"/><polyline points="17 7 17 17 7 17"/></svg>`,
-  spent:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 7 17 17 17"/></svg>`,
-  pending:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`
+  received: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+  </svg>`,
+  spent: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/>
+    <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
+    <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+  </svg>`,
+  pending: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="10"/>
+    <path d="M12 6v6l4 2"/>
+    <path d="M16.24 7.76l1.42-1.42M7.76 16.24l-1.42 1.42M7.76 7.76L6.34 6.34M16.24 16.24l1.42 1.42"/>
+  </svg>`
+};
+// Bank/Cash source icon for transaction items
+const SOURCE_ICONS = {
+  bank: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="9" height="9"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>`,
+  cash: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="9" height="9"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>`
 };
 const EDIT_ICON   = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
 const CYCLE_ICON  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>`;
@@ -2057,29 +2381,76 @@ function renderBudget(){
   const sp=sumByStatus('spent');
   const pnd=sumByStatus('pending');
   const avg=calcDailyAvg();
+  const bankBal=calcBankBalance();
+  const cashBal=calcCashBalance();
+  const cur=S.currency||'₹';
 
+  // Hero balance
   const balEl=document.getElementById('heroBalance');
   balEl.textContent=(bal<0?'-':'')+fmt(Math.abs(bal));
   balEl.className='hero-balance'+(bal<0?' negative':'');
 
+  // Hero bank/cash sub-badges
+  const hbb=document.getElementById('heroBankBal');
+  const hcb=document.getElementById('heroCashBal');
+  if(hbb)hbb.textContent='Bank '+fmt(bankBal);
+  if(hcb)hcb.textContent='Cash '+fmt(cashBal);
+
   const badge=document.getElementById('heroBadge');
-  if(S.totalCash>0){
-    const pct=((bal-S.totalCash)/S.totalCash*100);
+  const totalBase=(S.totalCash||0)+(S.totalBank||0);
+  if(totalBase>0){
+    const pct=((bal-totalBase)/totalBase*100);
     badge.textContent=(pct>=0?'▲ +':'▼ ')+Math.abs(pct).toFixed(1)+'%';
     badge.className='hero-delta'+(pct>=0?' pos':' neg');
   } else {badge.textContent='—';badge.className='hero-delta';}
 
   let sub='';
-  if(S.totalCash>0)sub='Base: '+fmt(S.totalCash);
+  if(S.totalCash>0)sub='Cash: '+fmt(S.totalCash);
+  if(S.totalBank>0)sub+=(sub?' · ':'')+'Bank: '+fmt(S.totalBank);
   if(S.monthlyBudget>0)sub+=(sub?' · ':'')+'Budget: '+fmt(S.monthlyBudget)+'/mo';
-  document.getElementById('heroSub').textContent=sub||'Tap ⚙ to set your cash & budget';
+  document.getElementById('heroSub').textContent=sub||'Tap ⚙ to set your balances';
 
+  // Summary cards
   document.getElementById('totalAdded').textContent=fmtS(rec);
   document.getElementById('totalSpent').textContent=fmtS(sp);
   document.getElementById('totalPending').textContent=fmtS(pnd);
+
+  // Bank / Cash split cards
+  const bankTxCount=S.transactions.filter(t=>t.source==='bank').length;
+  const cashTxCount=S.transactions.filter(t=>(t.source||'cash')==='cash').length;
+  const bvEl=document.getElementById('bankBalVal');
+  const cvEl=document.getElementById('cashBalVal');
+  if(bvEl){
+    bvEl.textContent=fmt(bankBal);
+    bvEl.style.color=bankBal<0?'var(--expense)':'var(--blue)';
+    document.getElementById('bankBalSub').textContent=bankTxCount+' transaction'+(bankTxCount!==1?'s':'');
+    document.getElementById('bankBadge').textContent=bankBal>=0?'NET ↑':'NET ↓';
+  }
+  if(cvEl){
+    cvEl.textContent=fmt(cashBal);
+    cvEl.style.color=cashBal<0?'var(--expense)':'var(--teal)';
+    document.getElementById('cashBalSub').textContent=cashTxCount+' transaction'+(cashTxCount!==1?'s':'');
+    document.getElementById('cashBadge').textContent=cashBal>=0?'NET ↑':'NET ↓';
+  }
+
+  // Pending predictions
+  const pred=calcPendingPredictions();
+  const predCard=document.getElementById('pendingPredCard');
+  if(pred&&predCard){
+    predCard.classList.add('visible');
+    document.getElementById('predCount').textContent=pred.count+' pending';
+    document.getElementById('predIfAll').textContent=fmtS(pred.ifCleared);
+    document.getElementById('predIfReceived').textContent=fmtS(pred.ifAllReceived);
+    document.getElementById('predIfSpent').textContent=fmtS(pred.ifAllSpent);
+  } else if(predCard){
+    predCard.classList.remove('visible');
+  }
+
+  // Stats
   document.getElementById('dailyAvg').textContent=fmtS(avg);
   document.getElementById('txCount').textContent=S.transactions.length;
 
+  // Budget bar
   if(S.monthlyBudget>0){
     const pct=Math.min((sp/S.monthlyBudget)*100,100);
     const fill=document.getElementById('budgetFill');
@@ -2117,10 +2488,11 @@ function renderTx(){
   const labelMap={received:'Received',spent:'Spent',pending:'Pending'};
   list.innerHTML=items.map(t=>{
     const st=t.status||t.type;
+    const src=t.source||'cash';
     const dt=new Date(t.datetime);
     const ds=dt.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})+' · '+dt.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
     return `<div class="tx-item ${st}" data-id="${t.id}">
-      <div class="tx-icon ${st}">
+      <div class="tx-icon ${st} tx-icon-new" id="txicon-${t.id}">
         <span class="ico ico-20">${TX_ICONS[st]||TX_ICONS.spent}</span>
       </div>
       <div class="tx-info">
@@ -2128,28 +2500,40 @@ function renderTx(){
         <div class="tx-meta">
           <span class="tx-date">${ds}</span>
           <span class="tx-badge ${st}">${labelMap[st]}</span>
+          <span class="tx-source-badge ${src}">${SOURCE_ICONS[src]||''}${src.charAt(0).toUpperCase()+src.slice(1)}</span>
         </div>
       </div>
       <div class="tx-right">
         <div class="tx-amount ${st}">${signMap[st]||''}${fmt(t.amount)}</div>
         <div class="tx-btns">
-          <button class="tx-btn edit" onclick="editTx('${t.id}')" title="Edit transaction">${EDIT_ICON}</button>
-          <button class="tx-btn cycle" onclick="cycleTxStatus('${t.id}')" title="Change status">${CYCLE_ICON}</button>
-          <button class="tx-btn del" onclick="deleteTx('${t.id}')" title="Delete transaction">${DEL_ICON}</button>
+          <button class="tx-btn edit" onclick="editTx('${t.id}')" title="Edit">${EDIT_ICON}</button>
+          <button class="tx-btn cycle" onclick="cycleTxStatus('${t.id}')" title="Cycle status">${CYCLE_ICON}</button>
+          <button class="tx-btn del" onclick="deleteTx('${t.id}')" title="Delete">${DEL_ICON}</button>
         </div>
       </div>
     </div>`;
   }).join('');
 }
 
-// Status cycle
+// Status cycle with icon animation
 function cycleTxStatus(id){
   const t=S.transactions.find(x=>x.id===id);if(!t)return;
   const cur=t.status||t.type;
   const next={received:'spent',spent:'pending',pending:'received'}[cur]||'received';
-  t.status=next;t.type=next;
-  saveState();renderBudget();
-  showToast(`Status → ${next.charAt(0).toUpperCase()+next.slice(1)}`,'info');
+  // Animate the icon before re-render
+  const iconEl=document.getElementById('txicon-'+id);
+  if(iconEl){
+    iconEl.classList.add('animating');
+    setTimeout(()=>{
+      t.status=next;t.type=next;
+      saveState();renderBudget();
+    },200);
+  } else {
+    t.status=next;t.type=next;
+    saveState();renderBudget();
+  }
+  const labels={received:'✅ Received',spent:'💸 Spent',pending:'⏳ Pending'};
+  showToast(labels[next]||next,'info');
 }
 
 // Filter chips
@@ -2172,6 +2556,7 @@ function openTxSheet(type='spent',edit=null){
   document.getElementById('transSheetSub').textContent=edit?'Update this record':'Record your income or expense';
   const t=edit?(edit.status||edit.type):type;
   setTxType(t);
+  setTxSource(edit?edit.source||'cash':'cash');
   document.getElementById('transReason').value=edit?edit.reason:'';
   document.getElementById('transAmount').value=edit?edit.amount:'';
   const now=new Date();now.setMinutes(now.getMinutes()-now.getTimezoneOffset());
@@ -2181,6 +2566,22 @@ function openTxSheet(type='spent',edit=null){
   ['transReason','transAmount'].forEach(id=>document.getElementById(id).classList.remove('err'));
   openSheet('transOverlay');
   setTimeout(()=>document.getElementById('transReason').focus(),320);
+}
+
+function setTxSource(src){
+  const cashBtn=document.getElementById('sourceCash');
+  const bankBtn=document.getElementById('sourceBank');
+  if(!cashBtn||!bankBtn)return;
+  cashBtn.classList.remove('active');bankBtn.classList.remove('active');
+  if(src==='bank'){
+    bankBtn.classList.add('active');
+    bankBtn.style.background='var(--blue-bg)';bankBtn.style.borderColor='var(--blue-bg)';bankBtn.style.color='var(--blue)';
+    cashBtn.style.background='';cashBtn.style.borderColor='';cashBtn.style.color='';
+  } else {
+    cashBtn.classList.add('active');
+    cashBtn.style.background='var(--teal-dim)';cashBtn.style.borderColor='rgba(0,229,195,0.35)';cashBtn.style.color='var(--teal)';
+    bankBtn.style.background='';bankBtn.style.borderColor='';bankBtn.style.color='';
+  }
 }
 
 function setTxType(type){
@@ -2193,6 +2594,14 @@ document.getElementById('typeSpent').addEventListener('click',()=>setTxType('spe
 document.getElementById('typeAdded').addEventListener('click',()=>setTxType('received'));
 document.getElementById('typePending').addEventListener('click',()=>setTxType('pending'));
 document.getElementById('transClose').addEventListener('click',()=>closeSheet('transOverlay'));
+
+// Source toggle wiring
+document.getElementById('sourceCash')?.addEventListener('click',()=>setTxSource('cash'));
+document.getElementById('sourceBank')?.addEventListener('click',()=>setTxSource('bank'));
+function getTxSource(){
+  const bankBtn=document.getElementById('sourceBank');
+  return bankBtn&&bankBtn.classList.contains('active')?'bank':'cash';
+}
 
 document.getElementById('transSave').addEventListener('click',()=>{
   const reason=document.getElementById('transReason').value.trim();
@@ -2210,10 +2619,12 @@ document.getElementById('transSave').addEventListener('click',()=>{
   const editId=document.getElementById('transEditId').value;
   if(editId){
     const idx=S.transactions.findIndex(t=>t.id===editId);
-    if(idx!==-1)S.transactions[idx]={...S.transactions[idx],reason,amount:amt,type,status:type,datetime:dtStr};
+    const src=getTxSource();
+    if(idx!==-1)S.transactions[idx]={...S.transactions[idx],reason,amount:amt,type,status:type,datetime:dtStr,source:src};
     showToast('Transaction updated','success');
   } else {
-    S.transactions.push({id:uid(),reason,amount:amt,type,status:type,datetime:dtStr});
+    const src=getTxSource();
+    S.transactions.push({id:uid(),reason,amount:amt,type,status:type,datetime:dtStr,source:src});
     showToast(type==='spent'?'Expense recorded':type==='pending'?'Pending recorded':'Income recorded','success');
   }
   saveState();closeSheet('transOverlay');renderBudget();
@@ -2303,83 +2714,252 @@ document.getElementById('receiptPdfBtn').addEventListener('click',()=>{
 });
 
 // ── CALCULATOR ──
+let calcMemory = S.calcMemory||0;
+
 function calcRender(){
   document.getElementById('calcExpr').textContent=calcDisplayExpr;
   const res=document.getElementById('calcResult');
+  const isErr=calcCur==='Error';
+  const val=parseFloat(calcCur);
   res.textContent=calcCur;
-  res.className='calc-result'+(calcCur==='Error'?' error':'');
-  const l=calcCur.length;
-  res.style.fontSize=l>13?'20px':l>10?'30px':l>7?'38px':'44px';
+
+  let cls='calc-result';
+  if(isErr) cls+=' error';
+  else if(!isNaN(val)&&calcJustEvaled){
+    if(val>0)cls+=' result-positive';
+    else if(val<0)cls+=' result-negative';
+  }
+  res.className=cls;
+
+  const l=calcCur.replace('-','').length;
+  res.style.fontSize=l>14?'18px':l>11?'26px':l>8?'36px':l>5?'42px':'46px';
+
+  // Memory dot indicator
+  const dot=document.getElementById('memDot');
+  if(dot)dot.classList.toggle('visible',calcMemory!==0);
 }
+
 function cInput(v){
   if(calcJustEvaled&&(v==='.'||!isNaN(v))){calcCur='0';calcDisplayExpr='';calcJustEvaled=false;}
-  if(v==='.'){if(calcCur.includes('.'))return;calcCur+='.';}
-  else{if(calcCur==='0'&&v!=='.')calcCur=v;else if(calcCur.length<15)calcCur+=v;}
+  if(v==='.'){if(calcCur.includes('.'))return;if(calcCur==='0')calcCur='0';calcCur+='.';}
+  else{if(calcCur==='0'&&v!=='.')calcCur=v;else if(calcCur.length<16)calcCur+=v;}
   calcRender();
 }
+
 function cOp(op){
   calcJustEvaled=false;
   const n=parseFloat(calcCur);
-  if(calcPrev!==null&&calcOp){const r=doCalc(calcPrev,n,calcOp);calcCur=fmtN(r);calcPrev=r;}
-  else calcPrev=n;
-  calcOp=op;calcDisplayExpr=fmtN(calcPrev)+' '+op;calcCur='0';calcRender();
+  if(calcPrev!==null&&calcOp&&!calcJustEvaled){
+    const r=doCalc(calcPrev,n,calcOp);
+    if(r==='Error'){calcCur='Error';calcOp=null;calcPrev=null;calcRender();return;}
+    calcCur=fmtN(r);calcPrev=r;
+  } else {
+    calcPrev=n;
+  }
+  calcOp=op;calcDisplayExpr=fmtN(calcPrev)+' '+opSymbol(op);calcCur='0';calcRender();
 }
+
+function opSymbol(op){return{'+':'+','-':'−','×':'×','÷':'÷'}[op]||op;}
+
 function cEqual(){
-  if(calcOp===null||calcPrev===null)return;
+  if(calcOp===null||calcPrev===null){
+    // just show result if no op — useful for history recall
+    calcJustEvaled=true;calcRender();return;
+  }
   const n=parseFloat(calcCur);
-  const expr=`${fmtN(calcPrev)} ${calcOp} ${fmtN(n)}`;
-  const res=doCalc(calcPrev,n,calcOp);const resStr=fmtN(res);
-  S.calcHistory.unshift({expr,result:resStr,id:uid()});
-  if(S.calcHistory.length>30)S.calcHistory=S.calcHistory.slice(0,30);
+  const expr=`${fmtN(calcPrev)} ${opSymbol(calcOp)} ${fmtN(n)}`;
+  const res=doCalc(calcPrev,n,calcOp);
+  if(res==='Error'){calcCur='Error';calcDisplayExpr=expr+' =';calcRender();return;}
+  const resStr=fmtN(res);
+  S.calcHistory.unshift({expr,result:resStr,id:uid(),ts:Date.now()});
+  if(S.calcHistory.length>50)S.calcHistory=S.calcHistory.slice(0,50);
   saveState();renderCalcHistory();
+  // Animate result
+  const resEl=document.getElementById('calcResult');
+  resEl.classList.remove('result-anim');void resEl.offsetWidth;resEl.classList.add('result-anim');
   calcDisplayExpr=expr+' =';calcCur=resStr;calcPrev=res;calcJustEvaled=true;calcOp=null;calcRender();
 }
-function doCalc(a,b,op){switch(op){case'+':return a+b;case'-':return a-b;case'×':return a*b;case'÷':return b===0?'Error':a/b;default:return b;}}
-function fmtN(n){
-  if(n==='Error')return'Error';if(typeof n==='string')n=parseFloat(n);if(isNaN(n))return'Error';
-  return String(parseFloat(n.toPrecision(12)));
+
+function doCalc(a,b,op){
+  if(typeof a==='string')a=parseFloat(a);
+  if(typeof b==='string')b=parseFloat(b);
+  if(isNaN(a)||isNaN(b))return'Error';
+  switch(op){
+    case'+':return a+b;
+    case'-':return a-b;
+    case'×':return a*b;
+    case'÷':return b===0?'Error':a/b;
+    default:return b;
+  }
 }
+
+function fmtN(n){
+  if(n==='Error')return'Error';
+  if(typeof n==='string')n=parseFloat(n);
+  if(isNaN(n))return'Error';
+  const r=parseFloat(n.toPrecision(12));
+  return String(r);
+}
+
+// Ripple helper
+function addRipple(btn,e){
+  const r=document.createElement('span');r.className='ripple';
+  const rect=btn.getBoundingClientRect();
+  r.style.left=(e.clientX-rect.left)+'px';r.style.top=(e.clientY-rect.top)+'px';
+  btn.appendChild(r);setTimeout(()=>r.remove(),450);
+}
+
 document.getElementById('calcGrid').addEventListener('click',e=>{
   const btn=e.target.closest('.calc-btn');if(!btn)return;
+  addRipple(btn,e);
   if(btn.dataset.num!==undefined){cInput(btn.dataset.num);return;}
   if(btn.dataset.op){cOp(btn.dataset.op);return;}
   const a=btn.dataset.action;
-  if(a==='clear'){calcCur='0';calcPrev=null;calcOp=null;calcJustEvaled=false;calcDisplayExpr='';calcRender();}
-  else if(a==='del'){calcCur=calcCur.length>1?calcCur.slice(0,-1):'0';calcRender();}
-  else if(a==='pct'){const n=parseFloat(calcCur);if(!isNaN(n)){calcCur=fmtN(n/100);calcRender();}}
+  if(a==='clear'){
+    // Double-tap AC to also clear memory hint
+    calcCur='0';calcPrev=null;calcOp=null;calcJustEvaled=false;calcDisplayExpr='';
+    document.getElementById('calcFnResult')?.classList.remove('visible');
+    calcRender();
+  }
+  else if(a==='del'){
+    if(calcCur==='Error'){calcCur='0';}
+    else calcCur=calcCur.length>1?calcCur.slice(0,-1):'0';
+    calcRender();
+  }
+  else if(a==='pct'){
+    const n=parseFloat(calcCur);
+    if(!isNaN(n)){
+      if(calcPrev!==null&&calcOp){calcCur=fmtN(calcPrev*n/100);}
+      else{calcCur=fmtN(n/100);}
+      calcRender();
+    }
+  }
   else if(a==='sign'){const n=parseFloat(calcCur);if(!isNaN(n)&&n!==0){calcCur=fmtN(-n);calcRender();}}
   else if(a==='equal')cEqual();
 });
 
-const HIST_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/></svg>`;
-const HIDE_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="18 15 12 9 6 15"/></svg>`;
+// ── MEMORY BUTTONS ──
+document.getElementById('memStore')?.addEventListener('click',()=>{
+  const n=parseFloat(calcCur);if(isNaN(n))return;
+  calcMemory=n;S.calcMemory=n;saveState();calcRender();
+  showToast('Memory stored: '+fmtN(n),'info',1800);
+});
+document.getElementById('memRecall')?.addEventListener('click',()=>{
+  if(calcMemory===0&&!S.calcMemory){showToast('Memory empty','warning',1500);return;}
+  calcCur=fmtN(calcMemory||S.calcMemory||0);calcJustEvaled=true;calcRender();
+  showToast('Memory recalled','info',1500);
+});
+document.getElementById('memAdd')?.addEventListener('click',()=>{
+  const n=parseFloat(calcCur);if(isNaN(n))return;
+  calcMemory=(calcMemory||0)+n;S.calcMemory=calcMemory;saveState();calcRender();
+  showToast('Added to memory: '+fmtN(calcMemory),'info',1800);
+});
+document.getElementById('memClear')?.addEventListener('click',()=>{
+  calcMemory=0;S.calcMemory=0;saveState();calcRender();
+  showToast('Memory cleared','info',1500);
+});
+
+// ── FINANCE QUICK FUNCTIONS ──
+document.querySelectorAll('.calc-fn-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const fn=btn.dataset.fn;
+    const n=parseFloat(calcCur);
+    if(isNaN(n)||n===0){showToast('Enter a value first','warning');return;}
+    const cur=S.currency||'₹';
+    const fnRes=document.getElementById('calcFnResult');
+    const fnLabel=document.getElementById('calcFnLabel');
+    const fnVal=document.getElementById('calcFnVal');
+    let label='',val=0;
+    if(fn==='gst'){
+      const gst=n*0.18;val=n+gst;
+      label=`GST 18% (${cur}${gst.toFixed(2)}) → Total`;
+    } else if(fn==='disc'){
+      // prompt-style: use calcOp second operand or default 10%
+      const pct=calcPrev&&calcJustEvaled?parseFloat(calcPrev):10;
+      const disc=n*(pct/100);val=n-disc;
+      label=`${pct}% Discount (−${cur}${disc.toFixed(2)}) → Total`;
+    } else if(fn==='tip'){
+      const tip=n*0.10;val=n+tip;
+      label=`10% Tip (${cur}${tip.toFixed(2)}) → Total`;
+    } else if(fn==='split'){
+      const by=calcPrev&&calcJustEvaled?Math.round(Math.abs(parseFloat(calcPrev))):2;
+      val=n/(by||2);
+      label=`Split by ${by||2} → Each`;
+    }
+    calcCur=fmtN(val);
+    if(fnRes&&fnLabel&&fnVal){
+      fnLabel.textContent=label;
+      fnVal.textContent=cur+parseFloat(val).toFixed(2);
+      fnRes.classList.add('visible');
+    }
+    calcJustEvaled=true;calcRender();
+  });
+});
+
+const HIST_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/></svg>`;
+const HIDE_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><polyline points="18 15 12 9 6 15"/></svg>`;
 
 document.getElementById('historyToggle').addEventListener('click',()=>{
   const p=document.getElementById('calcHistoryPanel');
   p.classList.toggle('open');
-  const isOpen = p.classList.contains('open');
-  document.getElementById('historyToggle').innerHTML = isOpen
-    ? `${HIDE_ICON} Hide`
-    : `${HIST_ICON} History`;
+  const isOpen=p.classList.contains('open');
+  const btn=document.getElementById('historyToggle');
+  btn.innerHTML=isOpen
+    ?`<span class="ico ico-11">${HIDE_ICON}</span> Hide`
+    :`<span class="ico ico-11">${HIST_ICON}</span> Hist`;
 });
+
 document.getElementById('clearHistory').addEventListener('click',()=>{
   showConfirm('delete','Clear History','Delete all calculation history?','Clear',()=>{
     S.calcHistory=[];saveState();renderCalcHistory();showToast('History cleared','info');
   });
 });
+
 function renderCalcHistory(){
   const list=document.getElementById('calcHistoryList');
+  if(!list)return;
   if(!S.calcHistory.length){
     list.innerHTML='<div class="empty-state" style="padding:14px"><div class="empty-sub">No calculations yet</div></div>';
     return;
   }
-  list.innerHTML=S.calcHistory.slice(0,15).map(h=>`
-    <div class="hist-item" onclick="loadHist('${escA(h.result)}')">
-      <span class="hist-expr">${escH(h.expr)}</span>
+  list.innerHTML=S.calcHistory.slice(0,20).map(h=>{
+    const ts=h.ts?new Date(h.ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}):'';
+    return `<div class="hist-item" onclick="loadHist('${escA(h.result)}')">
+      <span class="hist-expr">${escH(h.expr)}${ts?` <span style="color:var(--text4);font-size:10px">· ${ts}</span>`:'  '}</span>
       <span class="hist-res">${escH(h.result)}</span>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
-function loadHist(v){calcCur=v;calcDisplayExpr='';calcPrev=null;calcOp=null;calcJustEvaled=true;calcRender();showToast('Value loaded','info');}
+
+function loadHist(v){
+  calcCur=v;calcDisplayExpr='';calcPrev=null;calcOp=null;calcJustEvaled=true;
+  document.getElementById('calcFnResult')?.classList.remove('visible');
+  calcRender();showToast('Value loaded','info',1600);
+}
+
+// Enhanced keyboard support
+document.addEventListener('keydown',e=>{
+  if(currentTab!=='calc')return;
+  const k=e.key;
+  if(/[0-9]/.test(k))cInput(k);
+  else if(k==='.')cInput('.');
+  else if(k==='+')cOp('+');
+  else if(k==='-')cOp('-');
+  else if(k==='*')cOp('×');
+  else if(k==='/'){e.preventDefault();cOp('÷');}
+  else if(k==='Enter'||k==='='){e.preventDefault();cEqual();}
+  else if(k==='Backspace'){
+    if(calcCur==='Error')calcCur='0';
+    else calcCur=calcCur.length>1?calcCur.slice(0,-1):'0';
+    calcRender();
+  }
+  else if(k==='Escape'||k==='c'||k==='C'){
+    calcCur='0';calcPrev=null;calcOp=null;calcJustEvaled=false;calcDisplayExpr='';calcRender();
+  }
+  else if(k==='%'){const n=parseFloat(calcCur);if(!isNaN(n)){calcCur=fmtN(n/100);calcRender();}}
+  else if(k==='m'||k==='M'){calcMemory=parseFloat(calcCur)||0;S.calcMemory=calcMemory;saveState();calcRender();showToast('Memory stored','info',1500);}
+  else if(k==='r'||k==='R'){calcCur=fmtN(calcMemory||0);calcJustEvaled=true;calcRender();}
+});
 
 // Keyboard support
 document.addEventListener('keydown',e=>{
@@ -2466,12 +3046,14 @@ function deleteNote(id){
 document.getElementById('settingsBtn').addEventListener('click',()=>{
   document.getElementById('settingsCash').value=S.totalCash||'';
   document.getElementById('settingsBudget').value=S.monthlyBudget||'';
+  document.getElementById('settingsBank').value=S.totalBank||'';
   document.getElementById('currencySelect').value=S.currency||'₹';
   refreshInstallUI();openSheet('settingsOverlay');
 });
 document.getElementById('settingsClose').addEventListener('click',()=>closeSheet('settingsOverlay'));
 document.getElementById('saveBudgetSettings').addEventListener('click',()=>{
   S.totalCash=parseFloat(document.getElementById('settingsCash').value)||0;
+  S.totalBank=parseFloat(document.getElementById('settingsBank').value)||0;
   S.monthlyBudget=parseFloat(document.getElementById('settingsBudget').value)||0;
   S.currency=document.getElementById('currencySelect').value;
   saveState();renderBudget();showToast('Settings saved','success');closeSheet('settingsOverlay');
@@ -2511,9 +3093,13 @@ document.getElementById('importFile').addEventListener('change',e=>{
         if(imp.transactions){
           imp.transactions=imp.transactions.map(t=>{
             if(t.type==='added')t.type='received';
-            if(!t.status)t.status=t.type;return t;
+            if(!t.status)t.status=t.type;
+            if(!t.source)t.source='cash';
+            return t;
           });
         }
+        if(!imp.totalBank)imp.totalBank=0;
+        if(!imp.calcMemory)imp.calcMemory=0;
         S=Object.assign({},DEFAULT,imp);
         saveState();applyTheme();renderBudget();renderNotes();renderCalcHistory();
         closeSheet('settingsOverlay');showToast('Data imported','success');
@@ -2541,8 +3127,15 @@ window.addEventListener('resize',()=>{if(currentTab==='budget')drawGraph();});
 
 // ── INIT ──
 (function init(){
+  calcMemory=S.calcMemory||0;
   renderBudget();renderNotes();calcRender();renderCalcHistory();
   setTimeout(drawGraph,120);
+  // Ensure all existing transactions have a source
+  let migrated=false;
+  S.transactions=S.transactions.map(t=>{
+    if(!t.source){t.source='cash';migrated=true;}return t;
+  });
+  if(migrated){saveState();}
 })();
 </script>
 </body>
