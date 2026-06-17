@@ -2909,10 +2909,15 @@ document.getElementById('historyToggle').addEventListener('click',()=>{
     :`<span class="ico ico-11">${HIST_ICON}</span> Hist`;
 });
 
-document.getElementById('clearHistory').addEventListener('click',()=>{
-  showConfirm('delete','Clear History','Delete all calculation history?','Clear',()=>{
-    S.calcHistory=[];saveState();renderCalcHistory();showToast('History cleared','info');
-  });
+document.addEventListener('click', e => {
+  if (e.target.closest('#clearHistory')) {
+    showConfirm('delete', 'Clear History', 'Delete all calculation history?', 'Clear', () => {
+      S.calcHistory = [];
+      saveState();
+      renderCalcHistory();
+      showToast('History cleared', 'info');
+    });
+  }
 });
 
 function renderCalcHistory(){
