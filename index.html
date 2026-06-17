@@ -1204,12 +1204,24 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   font-size: 12.5px; font-weight: 700;
   display: flex; align-items: center; justify-content: center; gap: 7px;
   transition: transform var(--fast), opacity var(--fast), box-shadow var(--fast);
+  white-space: nowrap;
 }
-.export-action-btn.pdf { background: var(--input-bg); color: var(--teal); border: 1px solid rgba(0,229,195,0.3); }
-.export-action-btn.whatsapp { background: #25D366; color: white; }
+.export-action-btn.pdf {
+  background: var(--input-bg); color: var(--teal) !important;
+  border: 1.5px solid rgba(0,229,195,0.35);
+}
+.export-action-btn.pdf .ico { color: var(--teal) !important; }
+.export-action-btn.whatsapp { background: #25D366; color: white !important; }
+.export-action-btn.whatsapp .ico { color: white !important; }
 .export-action-btn:hover { transform: translateY(-1px); }
 .export-action-btn:active { transform: scale(0.96); opacity: 0.9; }
-.export-action-btn:disabled { opacity: 0.4; pointer-events: none; transform: none; }
+.export-action-btn:disabled {
+  opacity: 0.45; pointer-events: none; transform: none;
+  color: var(--text3) !important;
+}
+.export-action-btn.pdf:disabled { border-color: var(--border2); }
+.export-action-btn.pdf:disabled .ico,
+.export-action-btn.whatsapp:disabled .ico { color: var(--text3) !important; }
 
 @keyframes export-pulse {
   0%,100% { box-shadow: 0 0 0 0 var(--teal-glow); }
@@ -2108,10 +2120,14 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
         <div class="export-action-row">
           <button class="export-action-btn pdf" id="exportPdfBtn">
             <span class="ico ico-15">
-              <button class="chip" id="exportTransBtn" title="Export Transactions">
-        <span class="chip-dot" style="background:var(--text3)"></span>
-        Export
-      </button>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/>
+              </svg>
+            </span>
+            Export PDF
+          </button>
           <button class="export-action-btn whatsapp" id="exportWaBtn">
             <span class="ico ico-15">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
