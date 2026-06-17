@@ -1138,6 +1138,99 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
 .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); padding: 14px; }
 .no-scroll { overflow: hidden; }
 
+/* ── EXPORT BUTTON ── */
+.export-btn {
+  padding: 9px 13px; border-radius: var(--r-sm);
+  background: var(--card); border: 1px solid var(--border2);
+  color: var(--text2); font-size: 11.5px; font-weight: 700;
+  display: flex; align-items: center; gap: 6px; white-space: nowrap;
+  transition: all var(--fast) var(--ease); flex-shrink: 0;
+}
+.export-btn:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-mid); transform: translateY(-1px); }
+.export-btn:active { transform: scale(0.95); }
+
+/* ── EXPORT MODAL ── */
+.export-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(10px); z-index: 700;
+  display: none; align-items: flex-end; justify-content: center;
+  opacity: 0; transition: opacity var(--mid) var(--ease);
+}
+.export-overlay.open { display: flex; opacity: 1; }
+.export-sheet {
+  width: 100%; max-width: 480px;
+  background: var(--sheet-bg);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  border-top: 1px solid var(--border2);
+  transform: translateY(24px);
+  transition: transform var(--slow) var(--ease);
+  max-height: 92dvh; overflow-y: auto;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.export-overlay.open .export-sheet { transform: translateY(0); }
+
+.export-type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.export-type-card {
+  padding: 13px 10px; border-radius: var(--r); text-align: center;
+  background: var(--card); border: 1.5px solid var(--border2);
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  transition: all var(--fast) var(--ease); cursor: pointer;
+}
+.export-type-card .et-ico {
+  width: 32px; height: 32px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform var(--mid) var(--spring);
+}
+.export-type-card[data-export="all"] .et-ico { background: var(--teal-dim); color: var(--teal); }
+.export-type-card[data-export="received"] .et-ico { background: var(--income-bg); color: var(--income); }
+.export-type-card[data-export="spent"] .et-ico { background: var(--expense-bg); color: var(--expense); }
+.export-type-card[data-export="pending"] .et-ico { background: var(--pending-bg); color: var(--pending); }
+.export-type-card .et-label { font-size: 12px; font-weight: 700; color: var(--text2); }
+.export-type-card .et-count { font-size: 10px; color: var(--text3); font-weight: 600; }
+.export-type-card:hover { border-color: var(--border3); transform: translateY(-1px); }
+.export-type-card:active { transform: scale(0.97); }
+.export-type-card.active { border-color: var(--teal); background: var(--teal-mid); box-shadow: 0 0 0 3px var(--teal-dim); }
+.export-type-card.active .et-ico { transform: scale(1.1); }
+.export-type-card.active .et-label { color: var(--teal); }
+
+.export-preview {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 14px;
+  display: none; animation: fade-up 0.25s var(--ease);
+}
+.export-preview.visible { display: block; }
+.export-preview-top { display: flex; align-items: center; gap: 7px; margin-bottom: 10px; }
+.export-preview-title { font-size: 12px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; }
+.export-preview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.export-preview-item { text-align: center; }
+.export-preview-val { font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--text); }
+.export-preview-lbl { font-size: 9px; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; margin-top: 2px; }
+.export-preview-range {
+  margin-top: 11px; padding-top: 10px; border-top: 1px dashed var(--border2);
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  font-size: 11px; color: var(--text3); font-weight: 600;
+}
+.export-preview-empty { text-align: center; padding: 10px; font-size: 12px; color: var(--text3); }
+
+.export-action-row { display: flex; gap: 8px; }
+.export-action-btn {
+  flex: 1; padding: 12px; border-radius: var(--r-sm);
+  font-size: 12.5px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  transition: transform var(--fast), opacity var(--fast), box-shadow var(--fast);
+}
+.export-action-btn.pdf { background: var(--input-bg); color: var(--teal); border: 1px solid rgba(0,229,195,0.3); }
+.export-action-btn.whatsapp { background: #25D366; color: white; }
+.export-action-btn:hover { transform: translateY(-1px); }
+.export-action-btn:active { transform: scale(0.96); opacity: 0.9; }
+.export-action-btn:disabled { opacity: 0.4; pointer-events: none; transform: none; }
+
+@keyframes export-pulse {
+  0%,100% { box-shadow: 0 0 0 0 var(--teal-glow); }
+  50% { box-shadow: 0 0 0 6px transparent; }
+}
+.export-type-card.active { animation: export-pulse 1.6s ease-in-out infinite; }
+
 /* ── RESPONSIVE ── */
 @media (max-width: 380px) {
   .hero-balance { font-size: 34px; }
@@ -1473,12 +1566,24 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
         <input class="search-input" type="text" id="transSearch" placeholder="Search transactions…">
       </div>
     </div>
-    <div class="chips">
+   <div class="chips" style="align-items:center;">
       <button class="chip active" data-filter="all">All</button>
       <button class="chip" data-filter="received"><span class="chip-dot"></span> Received</button>
       <button class="chip" data-filter="spent"><span class="chip-dot"></span> Spent</button>
       <button class="chip" data-filter="pending"><span class="chip-dot"></span> Pending</button>
+      <button class="export-btn" id="exportTransBtn" title="Export Transactions">
+        <span class="ico ico-14">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+        </span>
+        Export
+      </button>
     </div>
+
+    <div class="section-label" id="transCountLabel">Transactions</div>
 
     <div class="section-label" id="transCountLabel">Transactions</div>
     <div class="tx-list" id="transList"></div>
@@ -1941,6 +2046,139 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
   </div>
 </div>
 
+<!-- ═══ EXPORT TRANSACTIONS SHEET ═══ -->
+<div class="export-overlay" id="exportOverlay">
+  <div class="export-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-hd">
+      <div class="sheet-title">Export Transactions</div>
+      <div class="sheet-sub">Choose a category, preview, then export</div>
+      <button class="sheet-close" id="exportClose">
+        <span class="ico ico-14">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </span>
+      </button>
+    </div>
+    <div class="sheet-body">
+
+      <div class="field">
+        <div class="field-lbl">Transaction Category</div>
+        <div class="export-type-grid" id="exportTypeGrid">
+          <div class="export-type-card active" data-export="all">
+            <div class="et-ico">
+              <span class="ico ico-18">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/>
+                </svg>
+              </span>
+            </div>
+            <div class="et-label">All</div>
+            <div class="et-count" id="etCountAll">0 records</div>
+          </div>
+          <div class="export-type-card" data-export="received">
+            <div class="et-ico">
+              <span class="ico ico-18">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+              </span>
+            </div>
+            <div class="et-label">Received</div>
+            <div class="et-count" id="etCountReceived">0 records</div>
+          </div>
+          <div class="export-type-card" data-export="spent">
+            <div class="et-ico">
+              <span class="ico ico-18">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/>
+                  <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
+                  <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+                </svg>
+              </span>
+            </div>
+            <div class="et-label">Spent</div>
+            <div class="et-count" id="etCountSpent">0 records</div>
+          </div>
+          <div class="export-type-card" data-export="pending">
+            <div class="et-ico">
+              <span class="ico ico-18">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                </svg>
+              </span>
+            </div>
+            <div class="et-label">Pending</div>
+            <div class="et-count" id="etCountPending">0 records</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="export-preview visible" id="exportPreview">
+        <div class="export-preview-top">
+          <span class="ico ico-14 ico-teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+          </span>
+          <span class="export-preview-title">Export Preview</span>
+        </div>
+        <div id="exportPreviewBody">
+          <div class="export-preview-grid">
+            <div class="export-preview-item">
+              <div class="export-preview-val" id="prevCount">0</div>
+              <div class="export-preview-lbl">Records</div>
+            </div>
+            <div class="export-preview-item">
+              <div class="export-preview-val" id="prevTotal">₹0</div>
+              <div class="export-preview-lbl">Total Amount</div>
+            </div>
+            <div class="export-preview-item">
+              <div class="export-preview-val" id="prevNet">₹0</div>
+              <div class="export-preview-lbl">Net Effect</div>
+            </div>
+          </div>
+          <div class="export-preview-range">
+            <span class="ico ico-12 ico-text3">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </span>
+            <span id="prevDateRange">No transactions</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-lbl">Export As</div>
+        <div class="export-action-row">
+          <button class="export-action-btn pdf" id="exportPdfBtn">
+            <span class="ico ico-15">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/>
+              </svg>
+            </span>
+            Export PDF
+          </button>
+          <button class="export-action-btn whatsapp" id="exportWaBtn">
+            <span class="ico ico-15">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.44 2 2 0 0 1 3.6 1.25h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.67a16 16 0 0 0 6 6l.42-.42a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21 16.92z"/>
+              </svg>
+            </span>
+            WhatsApp
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <!-- ═══ CONFIRM POPUP ═══ -->
 <div class="confirm-overlay" id="confirmOverlay">
   <div class="confirm-box">
@@ -2202,7 +2440,7 @@ document.getElementById('confirmOk').addEventListener('click',()=>{document.getE
 // ── SHEET UTILS ──
 function openSheet(id){document.getElementById(id).classList.add('open');document.body.classList.add('no-scroll');}
 function closeSheet(id){document.getElementById(id).classList.remove('open');document.body.classList.remove('no-scroll');}
-['transOverlay','noteOverlay','settingsOverlay','receiptOverlay'].forEach(id=>{
+['transOverlay','noteOverlay','settingsOverlay','receiptOverlay','exportOverlay'].forEach(id=>{
   document.getElementById(id).addEventListener('click',e=>{if(e.target===document.getElementById(id))closeSheet(id);});
 });
 
@@ -2542,6 +2780,7 @@ function renderTx(){
   else if(txFilter==='pending')items=items.filter(t=>(t.status||t.type)==='pending');
   if(txSearch){const q=txSearch.toLowerCase();items=items.filter(t=>t.reason.toLowerCase().includes(q)||String(t.amount).includes(q));}
   document.getElementById('transCountLabel').textContent=`Transactions (${items.length})`;
+  if(document.getElementById('exportOverlay')?.classList.contains('open')){refreshExportCounts();renderExportPreview();}
   if(!items.length){list.innerHTML='';empty.style.display='flex';return;}
   empty.style.display='none';
   const signMap={received:'+',spent:'−',pending:'~'};
@@ -2773,8 +3012,154 @@ document.getElementById('receiptPdfBtn').addEventListener('click',()=>{
   <div class="row"><span class="rk">Generated</span><span class="rv">${new Date().toLocaleString('en-IN')}</span></div>
   </div><div class="wm">POCKETFLOW PRO • VERIFIED RECORD</div></div>
   <script>window.onload=function(){setTimeout(function(){window.print();},350);}<\/script></body></html>`;
-  const w=window.open('','_blank','width=400,height=700');
+ const w=window.open('','_blank','width=400,height=700');
   if(w){w.document.write(html);w.document.close();}
+  else showToast('Allow popups for PDF','warning');
+});
+
+// ── EXPORT TRANSACTIONS ──
+let exportType='all';
+
+function getExportTx(type){
+  if(type==='all')return [...S.transactions];
+  return S.transactions.filter(t=>(t.status||t.type)===type);
+}
+
+function exportStats(type){
+  const items=getExportTx(type);
+  const count=items.length;
+  const total=items.reduce((a,t)=>a+(parseFloat(t.amount)||0),0);
+  // Net effect respects how each status affects combined balance
+  let net=0;
+  items.forEach(t=>{
+    const st=t.status||t.type;
+    if(st==='received')net+=parseFloat(t.amount)||0;
+    else if(st==='spent')net-=parseFloat(t.amount)||0;
+    // pending contributes 0 to net (matches calcBalance behavior)
+  });
+  const bankItems=items.filter(t=>(t.source||'cash')==='bank');
+  const cashItems=items.filter(t=>(t.source||'cash')==='cash');
+  const bankTotal=bankItems.reduce((a,t)=>a+(parseFloat(t.amount)||0),0);
+  const cashTotal=cashItems.reduce((a,t)=>a+(parseFloat(t.amount)||0),0);
+  let dateRange='No transactions';
+  if(count){
+    const sorted=[...items].sort((a,b)=>new Date(a.datetime)-new Date(b.datetime));
+    const first=new Date(sorted[0].datetime);
+    const last=new Date(sorted[sorted.length-1].datetime);
+    const f=first.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+    const l=last.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+    dateRange=(f===l)?f:f+' → '+l;
+  }
+  return {items,count,total,net,bankTotal,cashTotal,dateRange};
+}
+
+function refreshExportCounts(){
+  document.getElementById('etCountAll').textContent=S.transactions.length+' record'+(S.transactions.length!==1?'s':'');
+  ['received','spent','pending'].forEach(st=>{
+    const n=S.transactions.filter(t=>(t.status||t.type)===st).length;
+    const el=document.getElementById('etCount'+st.charAt(0).toUpperCase()+st.slice(1));
+    if(el)el.textContent=n+' record'+(n!==1?'s':'');
+  });
+}
+
+function renderExportPreview(){
+  const stats=exportStats(exportType);
+  document.getElementById('prevCount').textContent=stats.count;
+  document.getElementById('prevTotal').textContent=fmt(stats.total);
+  const netEl=document.getElementById('prevNet');
+  netEl.textContent=fmtSignedFull(stats.net);
+  netEl.style.color=stats.net<0?'var(--expense)':stats.net>0?'var(--income)':'var(--text)';
+  document.getElementById('prevDateRange').textContent=stats.dateRange;
+  const hasData=stats.count>0;
+  document.getElementById('exportPdfBtn').disabled=!hasData;
+  document.getElementById('exportWaBtn').disabled=!hasData;
+}
+
+document.getElementById('exportTransBtn').addEventListener('click',()=>{
+  refreshExportCounts();
+  exportType='all';
+  document.querySelectorAll('.export-type-card').forEach(c=>c.classList.toggle('active',c.dataset.export==='all'));
+  renderExportPreview();
+  openSheet('exportOverlay');
+});
+document.getElementById('exportClose').addEventListener('click',()=>closeSheet('exportOverlay'));
+
+document.getElementById('exportTypeGrid').addEventListener('click',e=>{
+  const card=e.target.closest('.export-type-card');if(!card)return;
+  document.querySelectorAll('.export-type-card').forEach(c=>c.classList.remove('active'));
+  card.classList.add('active');
+  exportType=card.dataset.export;
+  renderExportPreview();
+});
+
+const EXPORT_LABELS={all:'All Transactions',received:'Received Transactions',spent:'Spent Transactions',pending:'Pending Transactions'};
+
+// ── EXPORT: WHATSAPP ──
+document.getElementById('exportWaBtn').addEventListener('click',()=>{
+  const stats=exportStats(exportType);
+  if(!stats.count){showToast('No transactions to export','warning');return;}
+  const signMap={received:'+',spent:'−',pending:'~'};
+  const lines=stats.items
+    .slice().reverse()
+    .slice(0,40) // keep message reasonable in length
+    .map(t=>{
+      const st=t.status||t.type;
+      const dt=new Date(t.datetime);
+      const ds=dt.toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+      const src=(t.source||'cash')==='bank'?'🏦':'💵';
+      return `${signMap[st]||''}${fmt(t.amount)} ${src} — ${t.reason} (${ds})`;
+    }).join('\n');
+  const moreNote=stats.count>40?`\n…and ${stats.count-40} more`:'';
+  const msg=`*PocketFlow Pro — Export*\n\n📂 *${EXPORT_LABELS[exportType]}*\n📊 Records: *${stats.count}*\n💰 Total: *${fmt(stats.total)}*\n📈 Net Effect: *${fmtSignedFull(stats.net)}*\n🏦 Bank: ${fmt(stats.bankTotal)}  💵 Cash: ${fmt(stats.cashTotal)}\n📅 ${stats.dateRange}\n\n${lines}${moreNote}\n\n_Sent via PocketFlow Pro_`;
+  window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+  showToast('Opening WhatsApp…','success');
+});
+
+// ── EXPORT: PDF (receipt-style design) ──
+document.getElementById('exportPdfBtn').addEventListener('click',()=>{
+  const stats=exportStats(exportType);
+  if(!stats.count){showToast('No transactions to export','warning');return;}
+  const signMap={received:'+\u202F',spent:'−\u202F',pending:'~\u202F'};
+  const colorMap={received:'#059669',spent:'#DC2626',pending:'#D97706'};
+  const sorted=[...stats.items].reverse();
+  const rowsHtml=sorted.map(t=>{
+    const st=t.status||t.type;
+    const dt=new Date(t.datetime);
+    const ds=dt.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+    const ts=dt.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+    const src=(t.source||'cash')==='bank'?'Bank':'Cash';
+    const c=colorMap[st]||'#0A0F1E';
+    return `<div class="row"><span class="rk">${escH(t.reason)}<br><span style="font-size:10px;color:#94a3b8;font-weight:500">${ds} · ${ts} · ${src}</span></span><span class="rv" style="color:${c}">${signMap[st]||''}${fmt(t.amount)}</span></div>`;
+  }).join('');
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>PocketFlow Export</title>
+  <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;background:#f8fafc;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+  .r{max-width:380px;width:100%;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.12);background:white}
+  .rh{background:linear-gradient(135deg,#060D1E,#0D1F3C);padding:22px;text-align:center}
+  .rb{color:white;font-size:18px;font-weight:800;letter-spacing:-0.3px}.rbs{color:#00E5C3}
+  .rs{color:rgba(240,244,255,0.4);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin-top:3px}
+  .rb2{padding:18px}
+  .summary{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:14px 0;border-bottom:1px dashed #e2e8f0;margin-bottom:10px;text-align:center}
+  .sv{font-size:15px;font-weight:800;color:#0A0F1E}.sl{font-size:9px;color:#94a3b8;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;margin-top:2px}
+  .meta{font-size:11px;color:#64748b;text-align:center;padding-bottom:12px;font-weight:600}
+  .row{display:flex;justify-content:space-between;align-items:flex-start;padding:9px 0;border-bottom:1px solid #f1f5f9;gap:10px}
+  .row:last-child{border-bottom:none}
+  .rk{font-size:12px;font-weight:600;color:#1e293b;line-height:1.5}.rv{font-size:12px;font-weight:800;text-align:right;white-space:nowrap}
+  .wm{text-align:center;padding:10px;font-size:10px;color:#cbd5e1;font-weight:600;letter-spacing:1.2px;border-top:1px dashed #e2e8f0}
+  @media print{body{padding:0}.r{box-shadow:none;border-radius:0;max-width:100%}}</style></head>
+  <body><div class="r">
+  <div class="rh"><div class="rb">Pocket<span class="rbs">Flow</span> Pro</div><div class="rs">${EXPORT_LABELS[exportType]} — Export</div></div>
+  <div class="rb2">
+  <div class="summary">
+    <div><div class="sv">${stats.count}</div><div class="sl">Records</div></div>
+    <div><div class="sv">${fmt(stats.total)}</div><div class="sl">Total</div></div>
+    <div><div class="sv" style="color:${stats.net<0?'#DC2626':stats.net>0?'#059669':'#0A0F1E'}">${fmtSignedFull(stats.net)}</div><div class="sl">Net Effect</div></div>
+  </div>
+  <div class="meta">🏦 Bank: ${fmt(stats.bankTotal)} &nbsp;·&nbsp; 💵 Cash: ${fmt(stats.cashTotal)} &nbsp;·&nbsp; ${stats.dateRange}</div>
+  ${rowsHtml}
+  </div><div class="wm">POCKETFLOW PRO • VERIFIED EXPORT</div></div>
+  <script>window.onload=function(){setTimeout(function(){window.print();},350);}<\/script></body></html>`;
+  const w=window.open('','_blank','width=440,height=720');
+  if(w){w.document.write(html);w.document.close();showToast('Preparing PDF…','success');}
   else showToast('Allow popups for PDF','warning');
 });
 
