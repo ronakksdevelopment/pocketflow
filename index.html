@@ -1731,11 +1731,11 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
      <div class="field">
         <div class="field-lbl">Account Source</div>
         <div class="type-row">
-          <button class="type-btn added active" id="sourceCash" style="flex:1">
+          <button class="type-btn" id="sourceCash" style="flex:1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
             Cash
           </button>
-          <button class="type-btn spent" id="sourceBank" style="flex:1">
+          <button class="type-btn" id="sourceBank" style="flex:1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
             Bank
           </button>
@@ -1825,9 +1825,8 @@ input, textarea, select { font-family: inherit; outline: none; border: none; bac
     <div class="sheet-body">
 
       <div class="section-label" style="margin-top:0">Budget Setup</div>
-      <div class="card" style="display:flex;flex-direction:column;gap:11px">
+     <div class="card" style="display:flex;flex-direction:column;gap:11px">
         <div class="field">
-         <div class="field">
           <div class="field-lbl">Cash Balance</div>
           <input type="number" class="field-input" id="settingsCash" placeholder="Enter your cash on hand" min="0" step="0.01">
         </div>
@@ -2293,7 +2292,7 @@ function drawGraph(){
 
 // ── CALCULATIONS ──
 function calcBalance(){
-  let b=S.totalCash;
+  let b=(S.totalCash||0)+(S.totalBank||0);
   S.transactions.forEach(t=>{
     if((t.status||t.type)==='received')b+=t.amount;
     else if((t.status||t.type)==='spent')b-=t.amount;
@@ -2336,14 +2335,14 @@ function calcPendingPredictions(){
   const pending=S.transactions.filter(t=>(t.status||t.type)==='pending');
   if(!pending.length)return null;
   const currentBal=calcBalance();
-  const pendRec=pending.filter(t=>t._pendingDir==='received').reduce((a,t)=>a+t.amount,0);
-  const pendSp=pending.filter(t=>t._pendingDir!=='received').reduce((a,t)=>a+t.amount,0);
   const totalAmt=pending.reduce((a,t)=>a+t.amount,0);
+  // "If All Clear" means pending items are simply resolved/removed — no net change from them
+  // "All Received" and "All Spent" show best/worst case
   return {
     count: pending.length,
     ifAllReceived: currentBal + totalAmt,
     ifAllSpent:    currentBal - totalAmt,
-    ifCleared:     currentBal  // pending marked as cleared (removed)
+    ifCleared:     currentBal
   };
 }
 
@@ -2404,11 +2403,14 @@ function renderBudget(){
     badge.className='hero-delta'+(pct>=0?' pos':' neg');
   } else {badge.textContent='—';badge.className='hero-delta';}
 
+  // heroSub shows budget hint only — bank/cash are shown in the badge row below
   let sub='';
-  if(S.totalCash>0)sub='Cash: '+fmt(S.totalCash);
-  if(S.totalBank>0)sub+=(sub?' · ':'')+'Bank: '+fmt(S.totalBank);
-  if(S.monthlyBudget>0)sub+=(sub?' · ':'')+'Budget: '+fmt(S.monthlyBudget)+'/mo';
-  document.getElementById('heroSub').textContent=sub||'Tap ⚙ to set your balances';
+  if(S.monthlyBudget>0){
+    const sp=sumByStatus('spent');
+    const rem=S.monthlyBudget-sp;
+    sub=rem>=0?fmt(rem)+' left of '+fmt(S.monthlyBudget)+' budget':'Over budget by '+fmt(-rem);
+  }
+  document.getElementById('heroSub').textContent=sub||'Tap ⚙ to configure balances & budget';
 
   // Summary cards
   document.getElementById('totalAdded').textContent=fmtS(rec);
@@ -2572,18 +2574,20 @@ function setTxSource(src){
   const cashBtn=document.getElementById('sourceCash');
   const bankBtn=document.getElementById('sourceBank');
   if(!cashBtn||!bankBtn)return;
-  cashBtn.classList.remove('active');bankBtn.classList.remove('active');
+  // Reset both
+  [cashBtn,bankBtn].forEach(b=>{
+    b.classList.remove('active');
+    b.style.background='';b.style.borderColor='';b.style.color='';
+  });
   if(src==='bank'){
     bankBtn.classList.add('active');
-    bankBtn.style.background='var(--blue-bg)';bankBtn.style.borderColor='var(--blue-bg)';bankBtn.style.color='var(--blue)';
-    cashBtn.style.background='';cashBtn.style.borderColor='';cashBtn.style.color='';
+    bankBtn.style.cssText='flex:1;background:var(--blue-bg);border-color:rgba(96,165,250,0.35);color:var(--blue)';
   } else {
     cashBtn.classList.add('active');
-    cashBtn.style.background='var(--teal-dim)';cashBtn.style.borderColor='rgba(0,229,195,0.35)';cashBtn.style.color='var(--teal)';
-    bankBtn.style.background='';bankBtn.style.borderColor='';bankBtn.style.color='';
+    cashBtn.style.cssText='flex:1;background:var(--teal-dim);border-color:rgba(0,229,195,0.35);color:var(--teal)';
   }
 }
-
+   
 function setTxType(type){
   ['typeSpent','typeAdded','typePending'].forEach(id=>document.getElementById(id).classList.remove('active'));
   if(type==='spent')document.getElementById('typeSpent').classList.add('active');
@@ -2797,7 +2801,8 @@ function fmtN(n){
   if(n==='Error')return'Error';
   if(typeof n==='string')n=parseFloat(n);
   if(isNaN(n))return'Error';
-  const r=parseFloat(n.toPrecision(12));
+  if(!isFinite(n))return'Error';
+  const r=parseFloat(n.toPrecision(10));
   return String(r);
 }
 
@@ -2916,6 +2921,13 @@ document.addEventListener('click', e => {
       saveState();
       renderCalcHistory();
       showToast('History cleared', 'info');
+      // Close the history panel and reset toggle button label after clearing
+      const panel = document.getElementById('calcHistoryPanel');
+      const toggleBtn = document.getElementById('historyToggle');
+      if (panel && panel.classList.contains('open')) {
+        panel.classList.remove('open');
+        if (toggleBtn) toggleBtn.innerHTML = `<span class="ico ico-11">${HIST_ICON}</span> Hist`;
+      }
     });
   }
 });
@@ -2953,33 +2965,12 @@ document.addEventListener('keydown',e=>{
   else if(k==='*')cOp('×');
   else if(k==='/'){e.preventDefault();cOp('÷');}
   else if(k==='Enter'||k==='='){e.preventDefault();cEqual();}
-  else if(k==='Backspace'){
-    if(calcCur==='Error')calcCur='0';
-    else calcCur=calcCur.length>1?calcCur.slice(0,-1):'0';
-    calcRender();
-  }
   else if(k==='Escape'||k==='c'||k==='C'){
     calcCur='0';calcPrev=null;calcOp=null;calcJustEvaled=false;calcDisplayExpr='';calcRender();
   }
   else if(k==='%'){const n=parseFloat(calcCur);if(!isNaN(n)){calcCur=fmtN(n/100);calcRender();}}
   else if(k==='m'||k==='M'){calcMemory=parseFloat(calcCur)||0;S.calcMemory=calcMemory;saveState();calcRender();showToast('Memory stored','info',1500);}
   else if(k==='r'||k==='R'){calcCur=fmtN(calcMemory||0);calcJustEvaled=true;calcRender();}
-});
-
-// Keyboard support
-document.addEventListener('keydown',e=>{
-  if(currentTab!=='calc')return;
-  const k=e.key;
-  if(/[0-9]/.test(k))cInput(k);
-  else if(k==='.')cInput('.');
-  else if(k==='+')cOp('+');
-  else if(k==='-')cOp('-');
-  else if(k==='*')cOp('×');
-  else if(k==='/'){e.preventDefault();cOp('÷');}
-  else if(k==='Enter'||k==='=')cEqual();
-  else if(k==='Backspace'){calcCur=calcCur.length>1?calcCur.slice(0,-1):'0';calcRender();}
-  else if(k==='Escape'){calcCur='0';calcPrev=null;calcOp=null;calcJustEvaled=false;calcDisplayExpr='';calcRender();}
-  else if(k==='%'){const n=parseFloat(calcCur);if(!isNaN(n)){calcCur=fmtN(n/100);calcRender();}}
 });
 
 // ── NOTES ──
