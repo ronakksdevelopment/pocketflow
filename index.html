@@ -2434,8 +2434,6 @@ function renderBudget(){
   if(hcb)hcb.textContent='Cash: '+fmt(cashBal);
    
   const badge=document.getElementById('heroBadge');
-  const totalBase=(S.totalCash||0)+(S.totalBank||0);
-  const badge=document.getElementById('heroBadge');
   const totalBase=(parseFloat(S.totalCash)||0)+(parseFloat(S.totalBank)||0);
   if(totalBase>0){
     const pct=((bal-totalBase)/totalBase*100);
@@ -2455,7 +2453,6 @@ function renderBudget(){
   // heroSub shows budget hint only — bank/cash are shown in the badge row below
   let sub='';
   if(S.monthlyBudget>0){
-    const sp=sumByStatus('spent');
     const rem=S.monthlyBudget-sp;
     sub=rem>=0?fmt(rem)+' left of '+fmt(S.monthlyBudget)+' budget':'Over budget by '+fmt(-rem);
   }
@@ -2639,7 +2636,7 @@ function setTxSource(src){
   // Reset both
   [cashBtn,bankBtn].forEach(b=>{
     b.classList.remove('active');
-    b.style.background='';b.style.borderColor='';b.style.color='';
+    b.removeAttribute('style');b.style.flex='1';
   });
   if(src==='bank'){
     bankBtn.classList.add('active');
